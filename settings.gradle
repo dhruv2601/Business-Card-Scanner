@@ -1,0 +1,4 @@
+include ':app', ':tess-two' ,':annca'
+project(':tess-two').projectDir = new File('libraries/tess-two')
+
+project(':annca').projectDir = new File('libraries/annca')

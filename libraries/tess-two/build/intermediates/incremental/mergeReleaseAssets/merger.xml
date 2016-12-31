@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/dhruv/AndroidStudioProjects/BusinessCardScanner/libraries/tess-two/src/main/assets"/><source path="/home/dhruv/AndroidStudioProjects/BusinessCardScanner/libraries/tess-two/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/home/dhruv/AndroidStudioProjects/BusinessCardScanner/libraries/tess-two/src/release/assets"/></dataSet></merger>

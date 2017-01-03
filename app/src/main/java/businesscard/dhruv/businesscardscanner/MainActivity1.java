@@ -1,9 +1,13 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,11 +20,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.parse.Parse;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -34,9 +41,9 @@ public class MainActivity1 extends AppCompatActivity {
     public TabLayout tabLayout;
     private static final String TAG = "MainAct1";
     public FloatingActionButton openCam;
-    private final String DATA_PATH = Environment
-            .getExternalStorageDirectory().toString() + "/BusinessCardScanner/";
-    String[] paths = new String[]{DATA_PATH, DATA_PATH + "getname/"};
+    public static ArrayList<String> contactsName;
+    public static ArrayList<String> contactsNum;
+    public static int contactsTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +63,14 @@ public class MainActivity1 extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.black));
         }
 
-        for (String path : paths) {
-            File dir = new File(path);
-            if (!dir.exists()) {
-                if (!dir.mkdirs()) {
-                    Log.v(TAG, "ERROR: Creation of directory " + path + " on sdcard failed");
-                    return;
-                } else {
-                    Log.v(TAG, "Created directory " + path + " on sdcard");
-                }
-            }
-        }
+        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+                .applicationId("Mh9fvVwsWq5DcPVk3lGo9sKixRUuux0d6hqyDY1Y")
+                .server("https://parseapi.back4app.com/")
+                .clientKey("REWqvRAhPWnuLJajk6XQq58vzQtPBdeESEhWZsO6")
+                .build());
+
+        contactsName = new ArrayList<>();
+        contactsNum = new ArrayList<>();
 
         openCam = (FloatingActionButton) findViewById(R.id.fab_open_cam);
         openCam.setOnClickListener(new View.OnClickListener() {
@@ -123,13 +127,14 @@ public class MainActivity1 extends AppCompatActivity {
         Log.d(TAG, "person name is : " + names);
         Log.d(TAG, "organization name is: " + org);
 
+//        new getContacts().execute();
     }
 
     public class tikaOpenIntro {
 
         public String Tokens[];
 
-        {
+//        {
 //            tikaOpenIntro toi = new tikaOpenIntro();
 //
 //            String cnt;
@@ -143,8 +148,7 @@ public class MainActivity1 extends AppCompatActivity {
 //
 //            Log.d(TAG,"person name is : " + names);
 //            Log.d(TAG,"organization name is: " + org);
-
-        }
+//        }
 
         public String namefind(String cnt[]) {
             InputStream is;
@@ -152,8 +156,7 @@ public class MainActivity1 extends AppCompatActivity {
             NameFinderME nf;
             String sd = "";
             try {
-
-                is = new FileInputStream(DATA_PATH+"getname/en-ner-person.bin");
+                is = new FileInputStream("/home/dhruv/Downloads/en-ner-person.bin");
                 tnf = new TokenNameFinderModel(is);
                 nf = new NameFinderME(tnf);
 
@@ -203,7 +206,6 @@ public class MainActivity1 extends AppCompatActivity {
                 }
 
                 sd = fd.toString();
-
             } catch (FileNotFoundException e) {
 
                 e.printStackTrace();
@@ -215,9 +217,7 @@ public class MainActivity1 extends AppCompatActivity {
                 e.printStackTrace();
             }
             return sd;
-
         }
-
 
         public void tokenization(String tokens) {
 
@@ -234,7 +234,5 @@ public class MainActivity1 extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
-
 }

@@ -1,5 +1,8 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +40,7 @@ public class AllCardsFragment extends Fragment {
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new allCardRecyclerViewAdapter(getDataSet());
+            mAdapter = new allCardRecyclerViewAdapter(getDataSet(), view.getContext());
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -46,7 +49,6 @@ public class AllCardsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         ((allCardRecyclerViewAdapter) mAdapter).setOnItemClickListener(new allCardRecyclerViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -56,15 +58,16 @@ public class AllCardsFragment extends Fragment {
 
     }
 
-    // Save each card info into shared prefs and build the arraylist using them every time and in case they are empty sync up to check if the user has deleted the data
+    // Save each card info into shared prefs and build the arrayList using them every time and in case they are empty sync up to check if the user has deleted the data
 
-    private ArrayList<CardObject> getDataSet() {
+    private ArrayList<CardObject1> getDataSet() {
         ArrayList results = new ArrayList<CardObject>();
         for (int index = 0; index < 2; index++) {
-            CardObject obj = new CardObject(0, "Dhruv Rathi", "CEO Bitch", "BCScanner"); // make a map of images and the service and provide that here
+            CardObject1 obj = new CardObject1(0, "Dhruv Rathi", "CEO Bitch", "BCScanner"); // make a map of images and the service and provide that here
             Log.d(TAG, "index:: " + index);
             results.add(index, obj);
         }
         return results;
     }
+
 }

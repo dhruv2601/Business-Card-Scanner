@@ -1,5 +1,8 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,8 +25,10 @@ public class allCardRecyclerViewAdapter
         .DataObjectHolder> {
 
     public static final String TAG = "myRecViewAdapter";
-    private ArrayList<CardObject> mCardSet;
+    private ArrayList<CardObject1> mCardSet;
     private static MyClickListener myClickListener;
+    private Context context;
+
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
@@ -45,17 +50,20 @@ public class allCardRecyclerViewAdapter
 
         @Override
         public void onClick(View v) {
+            Intent i = new Intent(v.getContext(), ShowCardDetails.class);
+            v.getContext().startActivity(i);
+
             myClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
 
     public void setOnItemClickListener(MyClickListener myClickListener) {
-
         this.myClickListener = myClickListener;
     }
 
-    public allCardRecyclerViewAdapter(ArrayList<CardObject> myCardSet) {
+    public allCardRecyclerViewAdapter(ArrayList<CardObject1> myCardSet, Context context) {
         mCardSet = myCardSet;
+        this.context = context;
     }
 
     @Override
@@ -84,7 +92,7 @@ public class allCardRecyclerViewAdapter
         holder.txtCompany.setText(mCardSet.get(position).getTxtCompany());
     }
 
-    public void addItem(CardObject cardObject, int index) {
+    public void addItem(CardObject1 cardObject, int index) {
         mCardSet.add(index, cardObject);
         notifyItemInserted(index);
     }
@@ -102,5 +110,4 @@ public class allCardRecyclerViewAdapter
     public interface MyClickListener {
         public void onItemClick(int position, View v);
     }
-
 }

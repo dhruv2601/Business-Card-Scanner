@@ -43,6 +43,9 @@ dependencies {
     compile 'org.nibor.autolink:autolink:0.6.0'
     compile 'org.apache.opennlp:opennlp:1.6.0'
     compile 'org.apache.opennlp:opennlp-tools:1.6.0'
+    compile 'com.parse.bolts:bolts-tasks:1.3.0'
+    compile 'com.parse:parse-android:1.13.0'
+
 
     testCompile 'junit:junit:4.12'
     compile project(':tess-two')

@@ -49,7 +49,12 @@ public class AllContacts extends Fragment {
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new AllContactsRVAdapter(getDataSetNakli(), view.getContext());
+            if (MainActivity1.isopened == 0) {
+                mAdapter = new AllContactsRVAdapter(getDataSetNakli(), view.getContext());
+                MainActivity1.isopened = 1;
+            } else {
+                mAdapter = new AllContactsRVAdapter(getDataSet(), view.getContext());
+            }
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;

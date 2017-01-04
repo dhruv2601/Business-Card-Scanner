@@ -1,9 +1,12 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +45,6 @@ public class AllContactsRVAdapter extends RecyclerView
     private static AllContactsRVAdapter.MyClickListener myClickListener;
     private Context context;
 
-
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
@@ -63,21 +65,6 @@ public class AllContactsRVAdapter extends RecyclerView
         public void onClick(final View v) {
 
             Log.d(TAG, "contactTouched: " + MainActivity1.contactsName.get(getAdapterPosition()) + "\n" + MainActivity1.contactsNum.get(getAdapterPosition()));
-//            ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-//            query.whereEqualTo("username", MainActivity1.contactsName.get(getAdapterPosition()));
-//            query.getFirstInBackground(new GetCallback<ParseObject>() {
-//                @Override
-//                public void done(ParseObject object, ParseException e) {
-//                    Log.d(TAG, "exception: " + e);
-//
-//                    if (object == null) {
-//                        Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "is not using the app, BULAO USKO", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        // start messaging activity
-//                        Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "ABHI AA RHA HAI THAMA RHE", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
 
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             final boolean[] b = {false};
@@ -85,16 +72,32 @@ public class AllContactsRVAdapter extends RecyclerView
                 public void done(List<ParseUser> userList, com.parse.ParseException e) {
                     if (e == null) {
                         for (int i = 0; i < userList.size(); i++) {
-                            if (MainActivity1.contactsName.get(getAdapterPosition()).equals(userList.get(i).getUsername().toString())) {
+                            boolean areSame = PhoneNumberUtils.compare(userList.get(i).getUsername().toString(), MainActivity1.contactsName.get(getAdapterPosition()));
+                            if (areSame == true) {
                                 Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "ABHI AA RHA HAI THAMA RHE", Toast.LENGTH_SHORT).show();
                                 b[0] = true;
                                 break;
                             }
                             Log.d(TAG, "list: " + userList.get(i).getUsername().toString());
                         }
-                        if(b[0]==false)
-                        {
-                            Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "is not using the app, BULAO USKO", Toast.LENGTH_SHORT).show();
+
+                        if (b[0] == false) {
+//                            Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "is not using the app, BULAO USKO", Toast.LENGTH_SHORT).show();
+                            new AlertDialog.Builder(v.getContext()).setTitle("").setMessage(MainActivity1.contactsName.get(getAdapterPosition())+" is currently not using BC Scanner, send them an invite for a quick chat.")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue with delete
+                                        }
+                                    }).show();
+
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+                            shareIntent.setType("text/html");
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, MainActivity1.contactsName.get(getAdapterPosition()) + " have you tried the BC Scanner app?" + "\n");   // instead send the description here
+
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, "I invite you to a quick chat on BC Scanner. Scan all the your business cards and keep a sync and never loose your cards. " + "\n" + "Here will be the download link........I AM BATMAN");
+                            v.getContext().startActivity(Intent.createChooser(shareIntent, "Invite to chat"));
                         }
                     }
                 }
@@ -133,7 +136,7 @@ public class AllContactsRVAdapter extends RecyclerView
 
         switch (i) {
             case 0:
-                i = Color.BLUE;
+                i = Color.DKGRAY;
                 break;
             case 1:
                 i = Color.RED;

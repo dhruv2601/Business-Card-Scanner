@@ -3,12 +3,13 @@
     package="businesscard.dhruv.businesscardscanner"
     android:installLocation="preferExternal">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -45,16 +46,21 @@
         <activity
             android:name=".CropImage"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MainActivity1">
+        <activity android:name=".MainActivity1"></activity>
+        <activity android:name=".AllCardsFragment" />
+        <activity android:name=".ShowCardDetails" />
+        <activity android:name=".AllContacts" />
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AllCardsFragment" />
-        <activity android:name=".ShowCardDetails" />
-        <activity android:name=".AllContacts"></activity>
+        <activity android:name=".CreateAccount"></activity>
     </application>
 
 </manifest>

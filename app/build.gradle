@@ -45,9 +45,8 @@ dependencies {
     compile 'org.apache.opennlp:opennlp-tools:1.6.0'
     compile 'com.parse.bolts:bolts-tasks:1.3.0'
     compile 'com.parse:parse-android:1.13.0'
-
-
     testCompile 'junit:junit:4.12'
     compile project(':tess-two')
     compile project(':annca')
+    compile files('/home/dhruv/AndroidStudioProjects/BusinessCardScanner/libs/sinch-android-rtc-3.9.10.jar')
 }

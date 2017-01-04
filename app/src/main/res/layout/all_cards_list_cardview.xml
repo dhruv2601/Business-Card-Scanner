@@ -13,7 +13,6 @@
         android:layout_height="150dp"
         card_view:cardElevation="6dp"
         android:layout_gravity="center"
-        android:layout_marginTop="7dp"
         app:cardCornerRadius="4dp"
         card_view:cardUseCompatPadding="true"
         app:contentPadding="1dp">

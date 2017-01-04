@@ -14,11 +14,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.parse.Parse;
 
@@ -44,6 +46,7 @@ public class MainActivity1 extends AppCompatActivity {
     public static ArrayList<String> contactsName;
     public static ArrayList<String> contactsNum;
     public static int contactsTotal;
+    public static int isopened=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +66,11 @@ public class MainActivity1 extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.black));
         }
 
-        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-                .applicationId("Mh9fvVwsWq5DcPVk3lGo9sKixRUuux0d6hqyDY1Y")
-                .server("https://parseapi.back4app.com/")
-                .clientKey("REWqvRAhPWnuLJajk6XQq58vzQtPBdeESEhWZsO6")
-                .build());
+        boolean areSame = PhoneNumberUtils.compare("+91-9871117537","987 111 7537");
+        Log.d(TAG,"areSame: "+areSame);
+
+        boolean areSame2 = PhoneNumberUtils.compare("123456789","123456789");
+        Log.d(TAG,"areSame2222: "+areSame2);
 
         contactsName = new ArrayList<>();
         contactsNum = new ArrayList<>();
@@ -234,5 +237,24 @@ public class MainActivity1 extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    int back = 0;
+
+    @Override
+    public void onBackPressed() {
+        if (back == 0) {
+            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+            back++;
+        } else {
+            onDestroy();
+        }
+        super.onBackPressed();
     }
 }

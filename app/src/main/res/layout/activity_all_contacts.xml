@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_all_contacts"
     android:layout_width="match_parent"
+    android:background="@color/black"
     android:layout_height="match_parent"
     tools:context="businesscard.dhruv.businesscardscanner.AllContacts">
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="5dp"
         android:id="@+id/all_contacts_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

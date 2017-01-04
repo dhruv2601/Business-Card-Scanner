@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_gravity="center"
-        android:layout_marginTop="7dp"
         app:cardCornerRadius="4dp"
         app:contentPadding="1dp"
         card_view:cardElevation="6dp"

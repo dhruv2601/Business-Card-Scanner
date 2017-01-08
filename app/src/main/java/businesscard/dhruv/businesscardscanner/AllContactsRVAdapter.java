@@ -72,18 +72,24 @@ public class AllContactsRVAdapter extends RecyclerView
                 public void done(List<ParseUser> userList, com.parse.ParseException e) {
                     if (e == null) {
                         for (int i = 0; i < userList.size(); i++) {
-                            boolean areSame = PhoneNumberUtils.compare(userList.get(i).getUsername().toString(), MainActivity1.contactsName.get(getAdapterPosition()));
+                            boolean areSame = PhoneNumberUtils.compare(userList.get(i).getUsername().toString(), MainActivity1.contactsNum.get(getAdapterPosition()));
                             if (areSame == true) {
+
+                                Intent intent = new Intent(v.getContext(), MessagingActivity.class);
+                                intent.putExtra("RECIPIENT_ID", userList.get(i).getObjectId());
+                                v.getContext().startActivity(intent);
+
                                 Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "ABHI AA RHA HAI THAMA RHE", Toast.LENGTH_SHORT).show();
                                 b[0] = true;
                                 break;
                             }
+
                             Log.d(TAG, "list: " + userList.get(i).getUsername().toString());
                         }
 
                         if (b[0] == false) {
 //                            Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "is not using the app, BULAO USKO", Toast.LENGTH_SHORT).show();
-                            new AlertDialog.Builder(v.getContext()).setTitle("").setMessage(MainActivity1.contactsName.get(getAdapterPosition())+" is currently not using BC Scanner, send them an invite for a quick chat.")
+                            new AlertDialog.Builder(v.getContext()).setTitle("").setMessage(MainActivity1.contactsName.get(getAdapterPosition()) + " is currently not using BC Scanner, send them an invite for a quick chat.")
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // continue with delete
@@ -96,8 +102,12 @@ public class AllContactsRVAdapter extends RecyclerView
                             shareIntent.setType("text/plain");
                             shareIntent.putExtra(Intent.EXTRA_SUBJECT, MainActivity1.contactsName.get(getAdapterPosition()) + " have you tried the BC Scanner app?" + "\n");   // instead send the description here
 
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, "I invite you to a quick chat on BC Scanner. Scan all the your business cards and keep a sync and never loose your cards. " + "\n" + "Here will be the download link........I AM BATMAN");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, MainActivity1.contactsName.get(getAdapterPosition()) + " have you tried the BC Scanner app?" + "\n" + "I invite you to a quick chat on BC Scanner. Scan all the your business cards and keep a sync and never loose your cards. " + "\n" + "Here will be the download link........I AM BATMAN");
                             v.getContext().startActivity(Intent.createChooser(shareIntent, "Invite to chat"));
+                        }
+                        else if(e==null)
+                        {
+                            Log.d(TAG,"exception: "+e);
                         }
                     }
                 }

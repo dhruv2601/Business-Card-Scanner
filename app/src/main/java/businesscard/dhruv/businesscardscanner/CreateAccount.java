@@ -57,6 +57,7 @@ public class CreateAccount extends AppCompatActivity {
                 progressDialog.show();
 
                 if (password.isEmpty() || phoneNo.isEmpty() || email.isEmpty()) {
+                    progressDialog.dismiss();
                     Toast.makeText(CreateAccount.this, "No field can be left empty", Toast.LENGTH_LONG).show();
                 } else {
                     ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -71,6 +72,7 @@ public class CreateAccount extends AppCompatActivity {
                                 for (int i = 0; i < userList.size(); i++) {
                                     if (email.equals(userList.get(i).getEmail().toString())) {
                                         already = 1;
+                                        progressDialog.dismiss();
                                         new AlertDialog.Builder(CreateAccount.this).setTitle("Please Retry").setMessage("An Account already exists with the provided Email Address.")
                                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -79,6 +81,7 @@ public class CreateAccount extends AppCompatActivity {
                                                 }).show();
                                     } else if (phoneNo.equals(userList.get(i).getUsername().toString())) {
 
+                                        progressDialog.dismiss();
                                         already = 1;
                                         new AlertDialog.Builder(CreateAccount.this).setTitle("Please Retry").setMessage("An Account already exists with the provided Phone Number.")
                                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -101,6 +104,7 @@ public class CreateAccount extends AppCompatActivity {
 
                                                 // send an email
 
+                                                progressDialog.dismiss();
                                                 Intent i = new Intent(CreateAccount.this, MainActivity1.class);
                                                 startActivity(i);
                                             } else {

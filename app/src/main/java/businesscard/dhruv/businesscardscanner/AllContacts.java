@@ -1,7 +1,10 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
@@ -11,15 +14,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
-public class AllContacts extends Fragment {
+public class AllContacts extends Fragment implements SearchView.OnQueryTextListener {
 
     private static final String TAG = "AllContacts";
     private View view;
@@ -30,15 +38,33 @@ public class AllContacts extends Fragment {
     public ArrayList<String> contactsName;
     public ArrayList<String> contactsNum;
     public int contactsTotal;
+    public DataBaseHandler db;
+    ListView lv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+        db = new DataBaseHandler(getContext());
+
         new getContacts().execute();
 //        new checkContactsLen().execute();
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getActivity().getMenuInflater().inflate(R.menu.searchrv, menu);
+        SearchManager searchManager = (SearchManager) getContext().getSystemService( Context.SEARCH_SERVICE );
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+    }
+
 
     @Nullable
     @Override
@@ -76,10 +102,20 @@ public class AllContacts extends Fragment {
 
     private ArrayList<CardObjectContacts> getDataSet() {
         ArrayList results = new ArrayList<CardObjectContacts>();
-        for (int index = 0; index < MainActivity1.contactsTotal; index++) {
-            CardObjectContacts obj = new CardObjectContacts(MainActivity1.contactsName.get(index), MainActivity1.contactsNum.get(index)); // make a map of images and the service and provide that here
+
+        if (MainActivity1.hasEntered == false) {
+
+            for (int index = 0; index < MainActivity1.contactsTotal; index++) {
+                CardObjectContacts obj = new CardObjectContacts(MainActivity1.contactsName.get(index), MainActivity1.contactsNum.get(index)); // make a map of images and the service and provide that here
+                if (MainActivity1.hasEntered == false) {
+                    db.addContact(obj);
+                }
 //            Log.d(TAG, "index:: " + index);
-            results.add(index, obj);
+                results.add(index, obj);
+            }
+            MainActivity1.hasEntered = true;
+        } else {
+            results = db.getAllContacts();
         }
         return results;
     }
@@ -92,6 +128,16 @@ public class AllContacts extends Fragment {
             results.add(index, obj);
         }
         return results;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     public class getContacts extends AsyncTask {
@@ -107,41 +153,51 @@ public class AllContacts extends Fragment {
 
         @Override
         protected Object doInBackground(Object[] params) {
-            ContentResolver cr = getActivity().getContentResolver();
-            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                    null, null, null, null);
 
-            contactsTotal = cur.getCount();
-            String prevName = "";
-            if (cur.getCount() > 0) {
-                while (cur.moveToNext()) {
-                    String id = cur.getString(
-                            cur.getColumnIndex(ContactsContract.Contacts._ID));
-                    String name = cur.getString(cur.getColumnIndex(
-                            ContactsContract.Contacts.DISPLAY_NAME));
+            if (MainActivity1.hasEntered == false) {                    // if you are syncing contacts or the app ahs been opened the first time
+                db.clearDataBase();
+                ContentResolver cr = getActivity().getContentResolver();
+                Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                        null, null, null,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
-                    if (cur.getInt(cur.getColumnIndex(
-                            ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                        Cursor pCur = cr.query(
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+                contactsTotal = cur.getCount();
+                String prevName = "";
+                if (cur.getCount() > 0) {
+                    while (cur.moveToNext()) {
+                        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                        String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                            Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                    null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                    new String[]{id},
+                                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
-                        while (pCur.moveToNext()) {
-                            String phoneNo = pCur.getString(pCur.getColumnIndex(
-                                    ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            if (prevName.equals(name)) {
-                                // Alexis Texas :> 00
-                            } else {
-                                prevName = name;
-                                contactsName.add(i, name);
-                                contactsNum.add(i, phoneNo);
-                                i++;
+                            while (pCur.moveToNext()) {
+                                String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                if (prevName.equals(name) || phoneNo.length() <= 6) {
+                                } else {
+                                    prevName = name;
+                                    contactsName.add(i, name);
+                                    contactsNum.add(i, phoneNo);
+                                    i++;
+                                }
                             }
+                            pCur.close();
                         }
-                        pCur.close();
                     }
+                }
+
+            } else {                                                    // if db is not empty or the app has been previously opened
+                int size = db.getContactsCount();
+
+                ArrayList<CardObjectContacts> allContacts = new ArrayList<CardObjectContacts>();
+                allContacts = db.getAllContacts();
+                Log.d(TAG, "sizeDb: " + allContacts.size());
+                for (int i = 0; i < allContacts.size(); i++) {
+                    contactsName.add(i, allContacts.get(i).getTxtName());
+                    contactsNum.add(i, allContacts.get(i).getTxtNum());
                 }
             }
             return null;
@@ -153,8 +209,17 @@ public class AllContacts extends Fragment {
             MainActivity1.contactsNum = contactsNum;
             MainActivity1.contactsTotal = i;
 
+            if (MainActivity1.hasEntered == true) {
+                i = db.getContactsCount();
+            }
             mAdapter = new AllContactsRVAdapter(getDataSet(), view.getContext());
             mRecyclerView.setAdapter(mAdapter);
+
+            Log.d(TAG, "dbSize: " + db.getContactsCount());
+            ArrayList<CardObjectContacts> tepContact = db.getAllContacts();
+            for (int i = 0; i < db.getContactsCount(); i++) {
+                Log.d(TAG, "dbContact: " + tepContact.get(i));
+            }
             super.onPostExecute(o);
         }
     }

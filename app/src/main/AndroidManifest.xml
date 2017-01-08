@@ -18,6 +18,15 @@
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="businesscard.dhruv.businesscardscanner.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="businesscard.dhruv.businesscardscanner.permission.C2D_MESSAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -46,21 +55,28 @@
         <activity
             android:name=".CropImage"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MainActivity1"></activity>
+        <activity android:name=".MainActivity1" />
         <activity android:name=".AllCardsFragment" />
         <activity android:name=".ShowCardDetails" />
         <activity android:name=".AllContacts" />
         <activity
             android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".CreateAccount"></activity>
+        <activity android:name=".CreateAccount" />
+        <activity
+            android:name=".MessagingActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".MessageService" />
+
     </application>
 
 </manifest>

@@ -14,6 +14,42 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.lapism.searchview.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!---->
+                <!--<EditText-->
+                    <!--android:id="@+id/edt_search"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_width="300dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_marginRight="30dp"-->
+                    <!--android:background="@color/black"-->
+                    <!--android:hint="Search Contacts..."-->
+                    <!--android:textColor="@color/off_white"-->
+                    <!--android:textColorHint="@color/off_white" />-->
+
+                <!--<ImageView-->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_marginTop="7dp"-->
+                    <!--android:layout_toRightOf="@id/edt_search"-->
+                    <!--android:src="@drawable/search" />-->
+
+            </RelativeLayout>
+        </android.support.design.widget.TextInputLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
@@ -45,10 +81,10 @@
         android:id="@+id/fab_open_cam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fabSize="normal"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="40dp"
         android:clickable="true"
-        android:src="@drawable/add" />
+        android:src="@drawable/add"
+        app:fabSize="normal" />
 </RelativeLayout>

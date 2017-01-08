@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_all_contacts"
     android:layout_width="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/background"
     android:layout_height="match_parent"
     tools:context="businesscard.dhruv.businesscardscanner.AllContacts">
 

@@ -1,8 +1,11 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -10,19 +13,27 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.lapism.searchview.SearchView;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +58,10 @@ public class MainActivity1 extends AppCompatActivity {
     public static ArrayList<String> contactsNum;
     public static int contactsTotal;
     public static int isopened=0;
+    public BroadcastReceiver receiver;
+    private EditText search;
+    public static SharedPreferences sref;
+    public static boolean hasEntered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +81,46 @@ public class MainActivity1 extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.black));
         }
 
-        boolean areSame = PhoneNumberUtils.compare("+91-9871117537","987 111 7537");
-        Log.d(TAG,"areSame: "+areSame);
+        sref = MainActivity1.this.getSharedPreferences("entered", 0);
+        SharedPreferences.Editor editor = sref.edit();
 
-        boolean areSame2 = PhoneNumberUtils.compare("123456789","123456789");
-        Log.d(TAG,"areSame2222: "+areSame2);
+        if (sref.getBoolean("entered", false) == false) {
+            hasEntered = false;
+            editor.putBoolean("entered", true);
+            editor.apply();
+        }
+        else
+        {
+            hasEntered = true;
+        }
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Boolean success = intent.getBooleanExtra("success", false);
+//                progressDialog.dismiss();
+                //show a toast message if the Sinch
+                //service failed to start
+                if (!success) {
+                    Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+
+        //this is a pointer to the user
+
+        ParseUser user = ParseUser.getCurrentUser();
+        installation.put("user",user);
+        installation.saveInBackground();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
 
         contactsName = new ArrayList<>();
         contactsNum = new ArrayList<>();
+
+//        search = (EditText) findViewById(R.id.edt_search);
 
         openCam = (FloatingActionButton) findViewById(R.id.fab_open_cam);
         openCam.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +151,25 @@ public class MainActivity1 extends AppCompatActivity {
         Log.d(TAG, "initAdapter1");
 
         Log.d(TAG, "getSupport: " + this.getSupportFragmentManager() + "\n" + tabLayout.getTabCount());
-        PageAdapter adapter = new PageAdapter
+        final PageAdapter adapter = new PageAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
+
+//        search.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+////               adapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
         Log.d(TAG, "setAdapter");
         viewPager.setAdapter(adapter);
@@ -130,8 +194,24 @@ public class MainActivity1 extends AppCompatActivity {
         Log.d(TAG, "person name is : " + names);
         Log.d(TAG, "organization name is: " + org);
 
+        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
+
 //        new getContacts().execute();
     }
+
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_search: {
+//                mSearchView.show(true); // animate, ONLY FOR MENU ITEM !
+//                return true;
+//            }
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     public class tikaOpenIntro {
 

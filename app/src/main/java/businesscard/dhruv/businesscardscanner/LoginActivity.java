@@ -1,7 +1,11 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -14,6 +18,8 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.sinch.android.rtc.Sinch;
+import com.sinch.android.rtc.SinchClient;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtPass;
     private String phoneNo;
     private String password;
+//    public BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +53,45 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser != null) {
             //start next activity
             //start sinch service
+//            final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+//            startService(serviceIntent);
+
+//            receiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    Boolean success = intent.getBooleanExtra("success", false);
+////                progressDialog.dismiss();
+//                    //show a toast message if the Sinch
+//                    //service failed to start
+//                    if (!success) {
+//                        Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            };
+//
+//            LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.LoginActivity"));
+
             Intent i = new Intent(LoginActivity.this, MainActivity1.class);
             startActivity(i);
         } else {
+//            final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+//            startService(serviceIntent);
+
+//            receiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    Boolean success = intent.getBooleanExtra("success", false);
+////                progressDialog.dismiss();
+//                    //show a toast message if the Sinch
+//                    //service failed to start
+//                    if (!success) {
+//                        Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            };
+
+//            LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.LoginActivity"));
+
             createAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent i = new Intent(LoginActivity.this, MainActivity1.class);
                                 startActivity(i);
                             } else {
+                                progressDialog.dismiss();
                                 Toast.makeText(LoginActivity.this, "There was an error logging in, please check credentials.", Toast.LENGTH_SHORT).show();
                             }
                         }

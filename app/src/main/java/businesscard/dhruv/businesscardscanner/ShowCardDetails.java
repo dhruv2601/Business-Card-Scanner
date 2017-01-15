@@ -60,7 +60,7 @@ public class ShowCardDetails extends AppCompatActivity {
         ArrayList result = new ArrayList<DataObjectCardEntry>();
         // fill the result list properly
 
-        for(int i=0;i<10;i++)
+        for(int i=0;i<4;i++)
         {
             Log.d(TAG,"dataBeingFilledInCArdDetails");
 

@@ -77,7 +77,8 @@
         <service android:name=".MessageService" />
 
         <activity android:name=".ChatFragment" />
-        <activity android:name=".FullImage"></activity>
+        <activity android:name=".FullImage" />
+        <activity android:name=".SaveCardActivity"></activity>
     </application>
 
 </manifest>

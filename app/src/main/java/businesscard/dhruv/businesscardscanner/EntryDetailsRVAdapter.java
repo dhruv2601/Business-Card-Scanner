@@ -2,6 +2,7 @@ package businesscard.dhruv.businesscardscanner;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ public class EntryDetailsRVAdapter
         .Adapter<EntryDetailsRVAdapter
         .DataObjectHolder> {
     public static final String TAG = "EntryDetailsRvAdapter";
-    private ArrayList<DataObjectCardEntry> mCardSet;
+    public static ArrayList<DataObjectCardEntry> mCardSet;
     private static MyClickListener myClickListener;
     private Context context;
 
@@ -48,6 +49,20 @@ public class EntryDetailsRVAdapter
         public void onClick(View v) {
             // yahan jab alag alag things pe alag alag onClickListener
 
+            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Phone"))
+            {
+                Intent i = new Intent(Intent.ACTION_DIAL);
+                i.setData(Uri.parse("tel:"+mCardSet.get(getAdapterPosition()).getEntryDetails()));
+            }
+            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Email"))
+            {
+                Intent i = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto",mCardSet.get(getAdapterPosition()).getEntryDetails(),null));
+                v.getContext().startActivity(Intent.createChooser(i,"Send Email..."));
+            }
+            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Website"))
+            {
+                // web view
+            }
             myClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
@@ -99,6 +114,10 @@ public class EntryDetailsRVAdapter
         else if(mCardSet.get(position).getEntryType().equals("Website"))
         {
             holder.imageEntryType.setImageResource(R.drawable.wifi);
+        }
+        else
+        {
+            holder.imageEntryType.setImageResource(R.drawable.bussiness);
         }
     }
 

@@ -24,6 +24,7 @@ import io.github.memfis19.annca.internal.ui.view.RecordButton;
 import io.github.memfis19.annca.internal.utils.Size;
 import io.github.memfis19.annca.internal.utils.Utils;
 
+
 /**
  * Created by memfis on 12/1/16.
  */
@@ -356,6 +357,7 @@ public abstract class BaseAnncaActivity<CameraId> extends AnncaCameraActivity<Ca
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PREVIEW_CODE) {
+
                 if (PreviewActivity.isResultConfirm(data)) {
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(AnncaConfiguration.Arguments.FILE_PATH,

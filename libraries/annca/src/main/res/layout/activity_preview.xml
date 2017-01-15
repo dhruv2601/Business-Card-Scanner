@@ -5,13 +5,31 @@
     android:layout_height="match_parent">
     <!--android:background="#000000">-->
 
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="Preview Before Image Crop"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/preview_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
     <io.github.memfis19.annca.internal.ui.view.AspectFrameLayout
         android:id="@+id/previewAspectFrameLayout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_centerInParent="true">
 
         <SurfaceView
+            android:visibility="gone"
             android:id="@+id/video_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -52,6 +70,7 @@
             android:drawableTop="@drawable/ic_image_aspect_ratio_white_24dp" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/re_take_media"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_replay_white_24dp"

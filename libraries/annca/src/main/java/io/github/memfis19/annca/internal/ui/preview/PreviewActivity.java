@@ -19,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
-
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -48,6 +47,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     private final static String MIME_TYPE_VIDEO = "video";
     private final static String MIME_TYPE_IMAGE = "image";
 
+    private ImageView previewImg;
     private int mediaAction;
     public static String previewFilePath;
     private SurfaceView surfaceView;
@@ -156,11 +156,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(RESPONSE_CODE_ARG, BaseAnncaActivity.ACTION_CONFIRM).putExtra(FILE_PATH_ARG, previewFilePath);
-        PreviewActivity.this.finish();
-        setResult(RESULT_OK, resultIntent);
-
+        previewImg = (ImageView) findViewById(R.id.preview_img);
         String originalRatioLabel = getString(R.string.preview_controls_original_ratio_label);
         ratioLabels = new String[]{originalRatioLabel, "1:1", "4:3", "16:9"};
         ratios = new float[]{0f, 1f, 4f / 3f, 16f / 9f};
@@ -220,7 +216,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
 
         mediaAction = args.getInt(MEDIA_ACTION_ARG);
         previewFilePath = args.getString(FILE_PATH_ARG);
-
+        previewImg.setImageURI(Uri.parse(previewFilePath));
 
         if (mediaAction == AnncaConfiguration.MEDIA_ACTION_VIDEO) {
             displayVideo(savedInstanceState);

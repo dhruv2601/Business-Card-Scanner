@@ -178,6 +178,7 @@ public class MainActivity extends Activity {
             Log.d(TAG,"filePathInMainActivity: "+filePath);
             Intent i = new Intent(MainActivity.this, CropImage.class);
             onPhotoTaken();
+            MainActivity.this.finish();
             startActivity(i);
         } else {
             Log.v(TAG, "User cancelled");

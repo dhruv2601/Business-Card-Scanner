@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/action_select"
         android:title="Pick"
-        android:showAsAction="always" />
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+
 </menu>

@@ -54,11 +54,11 @@ public class CropImage extends Activity {
         setContentView(R.layout.activity_crop_image);
         resultView = (ImageView) findViewById(R.id.result_image);
 
-        String p = "file://" + "/storage/sdcard1/DCIM/Camera/Screenshot_2016-12-20-16-33-28_businesscard.dhruv.testingtesseract.png";
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
-        Bitmap bitmap = BitmapFactory.decodeFile((p), options);
+//        String p = "file://" + "/storage/sdcard1/DCIM/Camera/Screenshot_2016-12-20-16-33-28_businesscard.dhruv.testingtesseract.png";
+//        Bitmap bitmap = BitmapFactory.decodeFile((p), options);
+        String p;
         p = "file://" + MainActivity._path;
         Log.d(TAG, "_path: " + p);
         Uri u = Uri.parse(p);
@@ -114,6 +114,7 @@ public class CropImage extends Activity {
             String u = String.valueOf(croppedImgUri);
             String u1 = "";
             int count = 0;
+
             for (int i = 0; i < u.length(); i++) {
                 if (count > 7) {
                     u1 += u.charAt(i);
@@ -148,7 +149,7 @@ public class CropImage extends Activity {
                 String org = toi.orgfind(toi.Tokens);
 //                String location = toi.locationFind(toi.Tokens);
 
-                Log.d(TAG,"organization name: "+org);
+                Log.d(TAG, "organization name: " + org);
                 Log.d(TAG, "person name is : " + names);
 //                Log.d(TAG,"location is: "+location);
             }

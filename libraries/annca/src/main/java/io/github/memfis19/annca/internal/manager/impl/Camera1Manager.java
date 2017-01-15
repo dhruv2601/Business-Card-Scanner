@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -545,7 +546,6 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
             camera.stopPreview();
         } catch (Exception ignore) {
         }
-
         startPreview(surfaceHolder);
     }
 
@@ -558,6 +558,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
     public void onPictureTaken(byte[] bytes, Camera camera) {
         File pictureFile = outputPath;
         if (pictureFile == null) {
+            Toast.makeText(context, "Error creating media file, please check storage permissions.", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Error creating media file, check storage permissions.");
             return;
         }

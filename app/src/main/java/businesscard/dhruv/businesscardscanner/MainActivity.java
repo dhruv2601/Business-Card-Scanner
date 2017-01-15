@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
     // You should have the trained data file in assets folder
     // You can get them at:
     // http://code.google.com/p/tesseract-ocr/downloads/list
+
     public static final String lang = "eng";
 
     private static final String TAG = "MainActivity.java";
@@ -97,13 +98,13 @@ public class MainActivity extends Activity {
                     Log.v(TAG, "Created directory " + path + " on sdcard");
                 }
             }
-
         }
 
         // lang.traineddata file with the app (in assets folder)
         // You can get them at:
         // http://code.google.com/p/tesseract-ocr/downloads/list
         // This area needs work and optimization
+
         if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata")).exists()) {
             try {
                 AssetManager assetManager = getAssets();
@@ -119,6 +120,7 @@ public class MainActivity extends Activity {
                 while ((len = in.read(buf)) > 0) {
                     out.write(buf, 0, len);
                 }
+
                 in.close();
                 //gin.close();
                 out.close();
@@ -163,7 +165,6 @@ public class MainActivity extends Activity {
             return;
         }
         new Annca(photo1.build()).launchCamera();
-
 //        startActivityForResult(intent, 0);
     }
 
@@ -173,6 +174,8 @@ public class MainActivity extends Activity {
 
         if (requestCode == CAPTURE_MEDIA && resultCode == RESULT_OK) {
             Log.d(TAG, "resultCodeActiRes:  " + requestCode);
+            String filePath = data.getStringExtra(AnncaConfiguration.Arguments.FILE_PATH);
+            Log.d(TAG,"filePathInMainActivity: "+filePath);
             Intent i = new Intent(MainActivity.this, CropImage.class);
             onPhotoTaken();
             startActivity(i);

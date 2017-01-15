@@ -20,6 +20,7 @@ import io.github.memfis19.annca.internal.utils.CameraHelper;
 /**
  * Created by memfis on 7/6/16.
  */
+
 @SuppressWarnings("deprecation")
 public class Camera1Activity extends BaseAnncaActivity<Integer> {
 

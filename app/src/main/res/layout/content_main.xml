@@ -14,23 +14,9 @@
     tools:showIn="@layout/activity_show_card_details">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_phone_no"
-        android:layout_width="wrap_content"
+        android:id="@+id/rv_entry_details"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rv_email"-->
-        <!--android:layout_below="@id/rv_phone_no"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-    <!--</android.support.v7.widget.RecyclerView>-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rv_website"-->
-        <!--android:layout_below="@id/rv_email"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-    <!--</android.support.v7.widget.RecyclerView>-->
 
 </RelativeLayout>

@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 //            LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.LoginActivity"));
 
             Intent i = new Intent(LoginActivity.this, MainActivity1.class);
+            LoginActivity.this.finish();
             startActivity(i);
         } else {
 //            final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
@@ -125,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(LoginActivity.this, MainActivity1.class);
+                                LoginActivity.this.finish();
                                 startActivity(i);
                             } else {
                                 progressDialog.dismiss();

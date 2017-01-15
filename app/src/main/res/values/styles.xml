@@ -14,6 +14,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyInvisibleDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--buttons color-->
+        <item name="colorAccent">@android:color/transparent</item>
+        <!--title and message color-->
+        <item name="android:textColorPrimary">@android:color/transparent</item>
+        <!--dialog background-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
     <style name="textSize" parent="TextAppearance.AppCompat">
         <item name="android:textSize">17sp</item>
     </style>

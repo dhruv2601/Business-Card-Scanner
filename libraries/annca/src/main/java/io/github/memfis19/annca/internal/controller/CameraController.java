@@ -10,6 +10,7 @@ import io.github.memfis19.annca.internal.manager.CameraManager;
 /**
  * Created by memfis on 7/6/16.
  */
+
 public interface CameraController<CameraId> {
 
     void onCreate(Bundle savedInstanceState);

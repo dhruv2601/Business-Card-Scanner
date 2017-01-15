@@ -136,9 +136,22 @@ public class CropImage extends Activity {
             String binaryText = baseApi1.getUTF8Text();
             baseApi1.end();
 
-//            if (MainActivity.lang.equalsIgnoreCase("eng")) {
-//                binaryText = binaryText.replaceAll("[^a-zA-Z0-9]+", " ");
-//            }
+            if (MainActivity.lang.equalsIgnoreCase("eng")) {
+                String temp = binaryText.replaceAll("[^a-zA-Z0-9]+", " ");
+                Log.d(TAG, "tempStr: " + temp);
+
+                CropImage.tikaOpenIntro toi = new CropImage.tikaOpenIntro();
+
+                toi.tokenization(temp);
+
+                String names = toi.namefind(toi.Tokens);
+                String org = toi.orgfind(toi.Tokens);
+//                String location = toi.locationFind(toi.Tokens);
+
+                Log.d(TAG,"organization name: "+org);
+                Log.d(TAG, "person name is : " + names);
+//                Log.d(TAG,"location is: "+location);
+            }
 
             Log.d(TAG, "OCR Cropped: " + binaryText);
 
@@ -158,7 +171,7 @@ public class CropImage extends Activity {
                 ex.printStackTrace();
                 // Syntax error
             }
-            //PNE ENDS
+            //PhoneNoExtraction ENDS
 
             boolean b = Patterns.PHONE.matcher(binaryText).matches();
             Log.d(TAG, "b::: " + b);
@@ -173,6 +186,7 @@ public class CropImage extends Activity {
             Matcher emailMatcher = ptr.matcher(binaryText);
             while (emailMatcher.find()) {
                 Log.d(TAG, "Email: " + emailMatcher.group() + "\n" + emailMatcher.start() + "\n" + emailMatcher.end());
+
             }
 
             Log.d(TAG, "emailOver");
@@ -225,6 +239,133 @@ public class CropImage extends Activity {
 
         } else {
             return Color.BLACK;
+        }
+    }
+
+    public class tikaOpenIntro {
+
+        public String Tokens[];
+
+        public String namefind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+                sd = fd.toString();
+
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public String orgfind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream(
+                        "/storage/emulated/0/en-ner-organization.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+
+                sd = fd.toString();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public String locationFind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream(
+                        "/storage/emulated/0/en-ner-location.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+
+                sd = fd.toString();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public void tokenization(String tokens) {
+
+            InputStream is;
+            TokenizerModel tm;
+
+            try {
+                is = new FileInputStream("/storage/emulated/0/en-token.bin");
+                tm = new TokenizerModel(is);
+                Tokenizer tz = new TokenizerME(tm);
+                Tokens = tz.tokenize(tokens);
+
+                for (int i = 0; i < Tokens.length; i++) {
+                    Log.d(TAG, "tokens: " + Tokens[i]);
+                }
+                // System.out.println(Tokens[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

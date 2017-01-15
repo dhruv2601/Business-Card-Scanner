@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ public class allCardRecyclerViewAdapter
     private static MyClickListener myClickListener;
     private Context context;
 
-
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
@@ -45,12 +45,14 @@ public class allCardRecyclerViewAdapter
             txtPosition = (TextView) itemView.findViewById(R.id.txt_position_all_card);
             txtCompany = (TextView) itemView.findViewById(R.id.txt_company_all_card);
 
+            Log.d(TAG,"dataObjHolderALLCARDS");
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), ShowCardDetails.class);
+//            i.putExtra("")                                    // yahan pe sending timke par snd the phone no.s and ither details
             v.getContext().startActivity(i);
 
             myClickListener.onItemClick(getAdapterPosition(), v);
@@ -72,6 +74,7 @@ public class allCardRecyclerViewAdapter
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.all_cards_list_cardview, parent, false);
 
+        Log.d(TAG,"onCrateViewHolderOfAllCArds");
         DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
         return dataObjectHolder;
     }

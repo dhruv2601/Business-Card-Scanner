@@ -55,7 +55,6 @@ public class AllCardsFragment extends Fragment {
                 // handle on item click on each card item i.e. open each card to show details
             }
         });
-
     }
 
     // Save each card info into shared prefs and build the arrayList using them every time and in case they are empty sync up to check if the user has deleted the data
@@ -69,5 +68,4 @@ public class AllCardsFragment extends Fragment {
         }
         return results;
     }
-
 }

@@ -35,11 +35,15 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import opennlp.tools.namefind.NameFinderME;
@@ -57,11 +61,12 @@ public class MainActivity1 extends AppCompatActivity {
     public static ArrayList<String> contactsName;
     public static ArrayList<String> contactsNum;
     public static int contactsTotal;
-    public static int isopened=0;
+    public static int isopened = 0;
     public BroadcastReceiver receiver;
     private EditText search;
     public static SharedPreferences sref;
     public static boolean hasEntered;
+    public InputStream isPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +93,7 @@ public class MainActivity1 extends AppCompatActivity {
             hasEntered = false;
             editor.putBoolean("entered", true);
             editor.apply();
-        }
-        else
-        {
+        } else {
             hasEntered = true;
         }
 
@@ -112,7 +115,7 @@ public class MainActivity1 extends AppCompatActivity {
         //this is a pointer to the user
 
         ParseUser user = ParseUser.getCurrentUser();
-        installation.put("user",user);
+        installation.put("user", user);
         installation.saveInBackground();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
@@ -180,58 +183,15 @@ public class MainActivity1 extends AppCompatActivity {
         tabLayout.getTabAt(1).setText("Cards");
         tabLayout.getTabAt(2).setText("Chats");
 
-        tikaOpenIntro toi = new tikaOpenIntro();
-
-        String cnt;
-
-        cnt = "John is planning to specialize in Electrical Engineering in UC Berkley and pursue a career with IBM.";
-
-        toi.tokenization(cnt);
-
-        String names = toi.namefind(toi.Tokens);
-        String org = toi.orgfind(toi.Tokens);
-
-        Log.d(TAG, "person name is : " + names);
-        Log.d(TAG, "organization name is: " + org);
-
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
 
 //        new getContacts().execute();
     }
 
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_search: {
-//                mSearchView.show(true); // animate, ONLY FOR MENU ITEM !
-//                return true;
-//            }
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
     public class tikaOpenIntro {
 
         public String Tokens[];
-
-//        {
-//            tikaOpenIntro toi = new tikaOpenIntro();
-//
-//            String cnt;
-//
-//            cnt = "John is planning to specialize in Electrical Engineering in UC Berkley and pursue a career with IBM.";
-//
-//            toi.tokenization(cnt);
-//
-//            String names = toi.namefind(toi.Tokens);
-//            String org = toi.orgfind(toi.Tokens);
-//
-//            Log.d(TAG,"person name is : " + names);
-//            Log.d(TAG,"organization name is: " + org);
-//        }
 
         public String namefind(String cnt[]) {
             InputStream is;
@@ -239,19 +199,18 @@ public class MainActivity1 extends AppCompatActivity {
             NameFinderME nf;
             String sd = "";
             try {
-                is = new FileInputStream("/home/dhruv/Downloads/en-ner-person.bin");
+                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
+
                 tnf = new TokenNameFinderModel(is);
                 nf = new NameFinderME(tnf);
 
                 Span sp[] = nf.find(cnt);
-
                 String a[] = Span.spansToStrings(sp, cnt);
                 StringBuilder fd = new StringBuilder();
                 int l = a.length;
 
                 for (int j = 0; j < l; j++) {
                     fd = fd.append(a[j] + "\n");
-
                 }
                 sd = fd.toString();
 
@@ -275,7 +234,9 @@ public class MainActivity1 extends AppCompatActivity {
             String sd = "";
             try {
                 is = new FileInputStream(
-                        "/home/rahul/opennlp/model/en-ner-organization.bin");
+                        "/storage/emulated/0/en-ner-organization.bin");
+
+                Log.d(TAG, "inputS: " + is);
                 tnf = new TokenNameFinderModel(is);
                 nf = new NameFinderME(tnf);
                 Span sp[] = nf.find(cnt);
@@ -285,7 +246,6 @@ public class MainActivity1 extends AppCompatActivity {
 
                 for (int j = 0; j < l; j++) {
                     fd = fd.append(a[j] + "\n");
-
                 }
 
                 sd = fd.toString();
@@ -308,15 +268,42 @@ public class MainActivity1 extends AppCompatActivity {
             TokenizerModel tm;
 
             try {
-                is = new FileInputStream("/home/rahul/opennlp/model/en-token.bin");
+                is = new FileInputStream("/storage/emulated/0/en-token.bin");
                 tm = new TokenizerModel(is);
                 Tokenizer tz = new TokenizerME(tm);
                 Tokens = tz.tokenize(tokens);
+
+                for (int i = 0; i < Tokens.length; i++) {
+                    Log.d(TAG, "tokens: " + Tokens[i]);
+                }
                 // System.out.println(Tokens[1]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        private String convertStreamToString(InputStream is) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try {
+                Log.d(TAG, "inputStream: ");
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+//        Log.d(TAG,"inputStream: "+sb.toString());
+            return sb.toString();
+        }
+
     }
 
     @Override

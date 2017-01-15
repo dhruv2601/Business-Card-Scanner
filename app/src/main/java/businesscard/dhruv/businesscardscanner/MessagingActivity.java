@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -40,6 +41,9 @@ public class MessagingActivity extends Activity {
     private MessageAdapter messageAdapter;
     public MyMessageClientListener messageClientListener;
     public static int delieverd = 0;
+    private SharedPreferences pref;
+    private String recepName;
+    private String recepNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,9 @@ public class MessagingActivity extends Activity {
         //get recipientId from the intent
         Intent intent = getIntent();
         recipientId = intent.getStringExtra("RECIPIENT_ID");
+        recepNum = intent.getStringExtra("RECIPIENT_NUM");
+        recepName = intent.getStringExtra("RECIPIENT_NAME");
+
         currentUserId = ParseUser.getCurrentUser().getObjectId();
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
@@ -90,7 +97,7 @@ public class MessagingActivity extends Activity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d(TAG, "messageServiceConnected");
 
-            Log.d(TAG,"iBinder: "+iBinder);
+            Log.d(TAG, "iBinder: " + iBinder);
             messageService = (MessageService.MessageServiceInterface) iBinder;
             messageService.addMessageClientListener(messageClientListener);
         }
@@ -118,6 +125,22 @@ public class MessagingActivity extends Activity {
         public void onIncomingMessage(MessageClient client, Message message) {
             //Display an incoming message
             if (message.getSenderId().equals(recipientId)) {
+
+                pref = MessagingActivity.this.getSharedPreferences("prevChat", 0);
+                int temp = pref.getInt("numUser", 0);
+
+                if (pref.contains("prevUser" + recipientId) == false) {
+                    SharedPreferences.Editor editor = MessagingActivity.this.getSharedPreferences("prevChat", 0).edit();
+                    editor.putInt("numUser", temp + 1);
+                    editor.putInt("prevUser" + recipientId, 1);
+                    editor.putString("prevUser" + "Recep" + temp, recipientId);    // prevUserRecep1 dega 2nd user ke recep id
+                    editor.putString("prevUser" + "Name", recepName);
+                    editor.putString("prevUser" + "Num", recepNum);
+                    editor.commit();
+
+                    Log.d(TAG, "nameAsInMessagingAct " + recepName + "\n" + recepNum);
+                }
+
                 WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, delieverd);
             }
@@ -129,6 +152,19 @@ public class MessagingActivity extends Activity {
             //Later, I'll show you how to store the
             //message in Parse, so you can retrieve and
             //display them every time the conversation is opened
+
+            pref = MessagingActivity.this.getSharedPreferences("prevChat", 0);
+            if (pref.contains("prevUser" + recipientId) == false) {
+                int temp = pref.getInt("numUser", 0);
+                SharedPreferences.Editor editor = MessagingActivity.this.getSharedPreferences("prevChat", 0).edit();
+                editor.putInt("numUser", temp + 1);
+                editor.putInt("prevUser" + recipientId, 1);
+                editor.putString("prevUser" + "Recep" + temp, recipientId);    // prevUserRecep1 dega 2nd user ke recep id
+                editor.putString("prevUser" + "Name" + temp, recepName);
+                editor.putString("prevUser" + "Num" + temp, recepNum);
+                editor.commit();
+            }
+
             delieverd = 0;
             WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
             messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, delieverd);
@@ -145,27 +181,27 @@ public class MessagingActivity extends Activity {
         public void onShouldSendPushData(MessageClient client, Message message, List<PushPair> pushPairs) {
 
             final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
-            Log.d(TAG,"ready for push :) ");
+            Log.d(TAG, "ready for push :) ");
             ParseQuery userQuery = ParseUser.getQuery();
             userQuery.whereEqualTo("objectId", writableMessage.getRecipientIds().get(0));
 
-            ParseQuery pushQuery = ParseInstallation.getQuery();
-            pushQuery.whereMatchesQuery("user", userQuery);
-
-            ParsePush push = new ParsePush();
-            push.setQuery(pushQuery);
-            push.setMessage("You have a new message");
-            push.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Log.d(TAG, "push notif sent");
-                        Toast.makeText(MessagingActivity.this, "Push notif sent", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MessagingActivity.this, "unable to send notif " + e, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            ParseQuery pushQuery = ParseInstallation.getQuery();
+//            pushQuery.whereMatchesQuery("user", userQuery);
+//
+//            ParsePush push = new ParsePush();
+//            push.setQuery(pushQuery);
+//            push.setMessage("You have a new message");
+//            push.sendInBackground(new SendCallback() {
+//                @Override
+//                public void done(ParseException e) {
+//                    if (e == null) {
+//                        Log.d(TAG, "push notif sent");
+//                        Toast.makeText(MessagingActivity.this, "Push notif sent", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(MessagingActivity.this, "unable to send notif " + e, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
         }
     }
 }

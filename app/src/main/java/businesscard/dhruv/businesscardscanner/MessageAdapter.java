@@ -39,8 +39,8 @@ public class MessageAdapter extends BaseAdapter {
             prevChat = activity.getSharedPreferences("prevChat", 0);
 
             int prefSize = prevChat.getInt("size", 0);
-            for (int i = 0; i < prefSize; i++) {
-                String message = prevChat.getString("prevChat" + MessagingActivity.recipientId + i, null);
+            for (int i = 0; i <prefSize; i++) {
+                String message = prevChat.getString("prevChat" + MessagingActivity.recipientId + i, " ");
                 int direction = prevChat.getInt("prevChat" + "direction" + MessagingActivity.recipientId + i, 0);
                 WritableMessage writableMessage = new WritableMessage(MessagingActivity.recipientId, message);
                 messages.add(new Pair(writableMessage, direction));
@@ -57,7 +57,7 @@ public class MessageAdapter extends BaseAdapter {
 
         SharedPreferences.Editor editor = activity.getSharedPreferences("prevChat", 0).edit();
         editor.putString("prevChat" + MessagingActivity.recipientId + prefSize, message.getTextBody());
-        editor.putInt("prevChat" + direction + MessagingActivity.recipientId + prefSize, direction);
+        editor.putInt("prevChat" + "direction" + MessagingActivity.recipientId + prefSize, direction);
         prefSize++;
         editor.putInt("size", prefSize);
 

@@ -1,11 +1,14 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -21,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +44,7 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
     public int contactsTotal;
     public DataBaseHandler db;
     ListView lv;
+    public Dialog loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,20 +57,6 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
 //        new checkContactsLen().execute();
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getActivity().getMenuInflater().inflate(R.menu.searchrv, menu);
-        SearchManager searchManager = (SearchManager) getContext().getSystemService( Context.SEARCH_SERVICE );
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,8 +66,15 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
+
+
             if (MainActivity1.isopened == 0) {
                 mAdapter = new AllContactsRVAdapter(getDataSetNakli(), view.getContext());
+                loading = new Dialog(getContext(), R.style.MyInvisibleDialog);
+                loading.setCancelable(false);
+                loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                 MainActivity1.isopened = 1;
             } else {
                 mAdapter = new AllContactsRVAdapter(getDataSet(), view.getContext());

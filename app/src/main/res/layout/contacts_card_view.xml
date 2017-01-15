@@ -19,6 +19,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:background="@drawable/background"
             android:layout_height="match_parent">
 
             <ImageView
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="35dp"
+                android:textColor="@color/off_white"
                 android:layout_toRightOf="@+id/img_card"
                 android:text="Dhruv Rathi"
                 android:textSize="23dp"
@@ -54,6 +56,25 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="23dp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/call"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/callw" />
+
+            <ImageView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/call"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/messagew" />
 
         </RelativeLayout>
 

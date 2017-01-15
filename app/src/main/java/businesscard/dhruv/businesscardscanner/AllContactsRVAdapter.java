@@ -3,7 +3,10 @@ package businesscard.dhruv.businesscardscanner;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
@@ -51,12 +54,45 @@ public class AllContactsRVAdapter extends RecyclerView
         ImageView imageDrawable;
         TextView txtName;
         TextView txtNum;
+        ImageView call;
+        ImageView message;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             imageDrawable = (ImageView) itemView.findViewById(R.id.img_card);
             txtName = (TextView) itemView.findViewById(R.id.txt_contact_name);
             txtNum = (TextView) itemView.findViewById(R.id.txt_contact_num);
+            call = (ImageView) itemView.findViewById(R.id.call);
+            message = (ImageView) itemView.findViewById(R.id.message);
+
+            call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + MainActivity1.contactsNum.get(getAdapterPosition())));
+                    if (ActivityCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    v.getContext().startActivity(callIntent);
+                }
+            });
+
+            message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+                    sendIntent.setData(Uri.parse("sms:"));
+                    sendIntent.putExtra("address", MainActivity1.contactsNum.get(getAdapterPosition()));
+                    v.getContext().startActivity(sendIntent);
+                }
+            });
 
             itemView.setOnClickListener(this);
         }
@@ -77,6 +113,8 @@ public class AllContactsRVAdapter extends RecyclerView
 
                                 Intent intent = new Intent(v.getContext(), MessagingActivity.class);
                                 intent.putExtra("RECIPIENT_ID", userList.get(i).getObjectId());
+                                intent.putExtra("RECIPIENT_NAME",MainActivity1.contactsName.get(getAdapterPosition()));
+                                intent.putExtra("RECIPIENT_NUM",MainActivity1.contactsNum.get(getAdapterPosition()));
                                 v.getContext().startActivity(intent);
 
                                 Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "ABHI AA RHA HAI THAMA RHE", Toast.LENGTH_SHORT).show();
@@ -104,10 +142,8 @@ public class AllContactsRVAdapter extends RecyclerView
 
                             shareIntent.putExtra(Intent.EXTRA_TEXT, MainActivity1.contactsName.get(getAdapterPosition()) + " have you tried the BC Scanner app?" + "\n" + "I invite you to a quick chat on BC Scanner. Scan all the your business cards and keep a sync and never loose your cards. " + "\n" + "Here will be the download link........I AM BATMAN");
                             v.getContext().startActivity(Intent.createChooser(shareIntent, "Invite to chat"));
-                        }
-                        else if(e==null)
-                        {
-                            Log.d(TAG,"exception: "+e);
+                        } else if (e == null) {
+                            Log.d(TAG, "exception: " + e);
                         }
                     }
                 }

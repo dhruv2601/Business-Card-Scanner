@@ -9,7 +9,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -20,19 +20,13 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll">
 
             <ImageView
+                android:id="@+id/img_scanned_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:scaleX="0.45"
-                android:scaleY="0.45" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

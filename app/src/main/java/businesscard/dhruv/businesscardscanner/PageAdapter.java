@@ -21,11 +21,10 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Log.d(TAG,"pos: "+position);
-        switch (position)
-        {
+        Log.d(TAG, "pos: " + position);
+        switch (position) {
             case 0:
-                return new AllCardsFragment();
+                return new ChatFragment();
 
             case 1:
                 return new AllCardsFragment();

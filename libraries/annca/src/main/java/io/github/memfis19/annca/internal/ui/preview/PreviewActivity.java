@@ -145,6 +145,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
                                    @AnncaConfiguration.MediaAction int mediaAction,
                                    String filePath) {
 
+        Log.d(TAG, "filePathInPreviewAct: " + filePath);
         return new Intent(context, PreviewActivity.class)
                 .putExtra(MEDIA_ACTION_ARG, mediaAction)
                 .putExtra(FILE_PATH_ARG, filePath);
@@ -155,6 +156,10 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
 
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(RESPONSE_CODE_ARG, BaseAnncaActivity.ACTION_CONFIRM).putExtra(FILE_PATH_ARG, previewFilePath);
+        PreviewActivity.this.finish();
+        setResult(RESULT_OK, resultIntent);
 
         String originalRatioLabel = getString(R.string.preview_controls_original_ratio_label);
         ratioLabels = new String[]{originalRatioLabel, "1:1", "4:3", "16:9"};

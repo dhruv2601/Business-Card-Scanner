@@ -1,13 +1,18 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,11 +21,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.saeid.fabloading.LoadingView;
 
 public class SaveCardActivity extends AppCompatActivity {
@@ -55,6 +63,10 @@ public class SaveCardActivity extends AppCompatActivity {
     private LoadingView mLoadViewNoRepeat;
 
     public Handler mHandler;
+    public Dialog loading;
+    private de.hdodenhof.circleimageview.CircleImageView imgPersonImg;
+
+    public static final int PICK_IMAGE_REQUEST = 2601;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +74,7 @@ public class SaveCardActivity extends AppCompatActivity {
 
         mHandler = new Handler();
         entities = new HashMap<>();
+        imgPersonImg = (CircleImageView) findViewById(R.id.img_profile);
         imgScanned = (ImageView) findViewById(R.id.img_scanned_card);
         rvEntryDetails = (RecyclerView) findViewById(R.id.rv_entry_details);
         rvEntryDetails.setHasFixedSize(true);
@@ -77,6 +90,22 @@ public class SaveCardActivity extends AppCompatActivity {
 
             }
         });
+
+        imgPersonImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // pass intent to add image from gallery and then set here and save and update n the shared preference and the server also
+                Intent i = new Intent();
+                i.setType("image/*");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(i,"Select Picture"),PICK_IMAGE_REQUEST);
+            }
+        });
+
+        loading = new Dialog(this, R.style.MyInvisibleDialog);
+        loading.setCancelable(false);
+        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         mLoadingView = (LoadingView) findViewById(R.id.loading_view_repeat);
         int marvel_1 = R.drawable.marvel_1;
@@ -115,6 +144,26 @@ public class SaveCardActivity extends AppCompatActivity {
 
         imgScanned.setImageBitmap(cardBitmap);
         new extractOCR().execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+//                imgPersonImg.setImageBitmap(bitmap);
+
+                // --------------->>>>>>>>>>>>>>>>>>>>      SAVE IN SHARED PREFERENCES AND LOCALLY ONLY   <<<<<<<<<--------
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private ArrayList<DataObjectCardEntry> getDataSet1() {
@@ -166,7 +215,6 @@ public class SaveCardActivity extends AppCompatActivity {
                 i = 0;
             }
         }
-
         return result;
     }
 
@@ -184,7 +232,6 @@ public class SaveCardActivity extends AppCompatActivity {
 
         return bitmap_new;
     }
-
 
     private double GetColorDistance(int c1, int c2) {
         int db = Color.blue(c1) - Color.blue(c2);
@@ -225,6 +272,7 @@ public class SaveCardActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            loading.show();
             startRepeatingTask();
 
             super.onPreExecute();
@@ -237,7 +285,6 @@ public class SaveCardActivity extends AppCompatActivity {
         void stopRepeatingTask() {
             mHandler.removeCallbacks(statusChecker);
         }
-
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -342,6 +389,7 @@ public class SaveCardActivity extends AppCompatActivity {
             adapter = new EntryDetailsRVAdapter(getDataSet(), SaveCardActivity.this);
             rvEntryDetails.setAdapter(adapter);
 
+            loading.hide();
             stopRepeatingTask();
             mLoadingView.setVisibility(View.GONE);
             mLoadViewLong.setVisibility(View.GONE);

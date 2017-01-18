@@ -16,51 +16,11 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view_long"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="0dp"
-        android:layout_marginBottom="40dp"
-        android:layout_weight="1"
-        android:scaleX="1"
-        android:scaleY="1"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true" />
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:layout_weight="1"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true" />
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view_repeat"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_weight="1"
-        android:scaleX="2"
-        android:scaleY="2"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true"
-        app:mfl_repeat="1" />
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_save_contact"
         android:layout_width="wrap_content"
         app:fabSize="normal"
-        android:src="@drawable/save"
+        android:src="@drawable/edit"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:layout_below="@+id/rv_entry_details"

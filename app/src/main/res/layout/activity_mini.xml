@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,23 +31,23 @@
 
                 <!---->
                 <!--<EditText-->
-                    <!--android:id="@+id/edt_search"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:layout_width="300dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginRight="30dp"-->
-                    <!--android:background="@color/black"-->
-                    <!--android:hint="Search Contacts..."-->
-                    <!--android:textColor="@color/off_white"-->
-                    <!--android:textColorHint="@color/off_white" />-->
+                <!--android:id="@+id/edt_search"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="300dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginRight="30dp"-->
+                <!--android:background="@color/black"-->
+                <!--android:hint="Search Contacts..."-->
+                <!--android:textColor="@color/off_white"-->
+                <!--android:textColorHint="@color/off_white" />-->
 
                 <!--<ImageView-->
-                    <!--android:visibility="gone"-->
-                    <!--android:layout_width="30dp"-->
-                    <!--android:layout_height="30dp"-->
-                    <!--android:layout_marginTop="7dp"-->
-                    <!--android:layout_toRightOf="@id/edt_search"-->
-                    <!--android:src="@drawable/search" />-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_marginTop="7dp"-->
+                <!--android:layout_toRightOf="@id/edt_search"-->
+                <!--android:src="@drawable/search" />-->
 
             </RelativeLayout>
         </android.support.design.widget.TextInputLayout>
@@ -87,4 +88,5 @@
         android:clickable="true"
         android:src="@drawable/add"
         app:fabSize="normal" />
+
 </RelativeLayout>

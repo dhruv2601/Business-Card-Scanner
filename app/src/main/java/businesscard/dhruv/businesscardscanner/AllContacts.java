@@ -51,6 +51,11 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+        loading = new Dialog(getContext(), R.style.MyInvisibleDialog);
+        loading.setCancelable(false);
+        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         db = new DataBaseHandler(getContext());
 
         new getContacts().execute();
@@ -67,14 +72,8 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
 
-
             if (MainActivity1.isopened == 0) {
                 mAdapter = new AllContactsRVAdapter(getDataSetNakli(), view.getContext());
-                loading = new Dialog(getContext(), R.style.MyInvisibleDialog);
-                loading.setCancelable(false);
-                loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
                 MainActivity1.isopened = 1;
             } else {
                 mAdapter = new AllContactsRVAdapter(getDataSet(), view.getContext());
@@ -146,6 +145,9 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
         protected void onPreExecute() {
             contactsName = new ArrayList<>();
             contactsNum = new ArrayList<>();
+            if (MainActivity1.hasEntered == false) {
+                loading.show();
+            }
             super.onPreExecute();
         }
 
@@ -209,6 +211,8 @@ public class AllContacts extends Fragment implements SearchView.OnQueryTextListe
 
             if (MainActivity1.hasEntered == true) {
                 i = db.getContactsCount();
+            } else {
+                loading.dismiss();
             }
             mAdapter = new AllContactsRVAdapter(getDataSet(), view.getContext());
             mRecyclerView.setAdapter(mAdapter);

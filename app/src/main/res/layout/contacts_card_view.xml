@@ -19,7 +19,6 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@drawable/background"
             android:layout_height="match_parent">
 
             <ImageView
@@ -36,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="35dp"
-                android:textColor="@color/off_white"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
                 android:layout_toRightOf="@+id/img_card"
                 android:text="Dhruv Rathi"
                 android:textSize="23dp"
@@ -49,7 +49,7 @@
                 android:layout_below="@id/txt_contact_name"
                 android:layout_gravity="center"
                 android:layout_marginLeft="35dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/img_card"
                 android:fontFamily="monospace"
                 android:text="9868904222"
@@ -59,22 +59,23 @@
 
             <ImageView
                 android:id="@+id/call"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/callw" />
+                android:src="@drawable/call" />
 
             <ImageView
                 android:id="@+id/message"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@id/call"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/messagew" />
+                android:src="@drawable/message" />
 
         </RelativeLayout>
 

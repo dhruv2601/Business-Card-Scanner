@@ -1,7 +1,6 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,39 +9,41 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
-import android.os.Looper;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Time;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.os.Handler;
-
-import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.saeid.fabloading.LoadingView;
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.util.InvalidFormatException;
+import opennlp.tools.util.Span;
 
 public class SaveCardActivity extends AppCompatActivity {
 
@@ -63,10 +64,13 @@ public class SaveCardActivity extends AppCompatActivity {
     private LoadingView mLoadViewNoRepeat;
 
     public Handler mHandler;
-    public Dialog loading;
+    //    public Dialog loading;
     private de.hdodenhof.circleimageview.CircleImageView imgPersonImg;
+    private Button addAnotherField;
 
     public static final int PICK_IMAGE_REQUEST = 2601;
+    private ArrayList<DataObjectCardEntry> result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +78,15 @@ public class SaveCardActivity extends AppCompatActivity {
 
         mHandler = new Handler();
         entities = new HashMap<>();
+
+        addAnotherField = (Button) findViewById(R.id.btn_add_detail);
         imgPersonImg = (CircleImageView) findViewById(R.id.img_profile);
         imgScanned = (ImageView) findViewById(R.id.img_scanned_card);
         rvEntryDetails = (RecyclerView) findViewById(R.id.rv_entry_details);
         rvEntryDetails.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         rvEntryDetails.setLayoutManager(layoutManager);
+        rvEntryDetails.setNestedScrollingEnabled(false);
         adapter = new EntryDetailsRVAdapter(getDataSet1(), SaveCardActivity.this);
         rvEntryDetails.setAdapter(adapter);
 
@@ -87,7 +94,7 @@ public class SaveCardActivity extends AppCompatActivity {
         fabSaveContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // edit text mn jo data edit hua hai save that
             }
         });
 
@@ -98,14 +105,32 @@ public class SaveCardActivity extends AppCompatActivity {
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(i,"Select Picture"),PICK_IMAGE_REQUEST);
+                startActivityForResult(Intent.createChooser(i, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
 
-        loading = new Dialog(this, R.style.MyInvisibleDialog);
-        loading.setCancelable(false);
-        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addAnotherField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int yet=0;
+                if(entities.containsKey("NewNo"))
+                {
+                    yet = Integer.parseInt(entities.get("NewNo"));
+                }
+                entities.put("NewField"+(++yet),"");
+                entities.put("NewNo",String.valueOf(yet));
+
+                EntryDetailsRVAdapter entryDetailsRVAdapter = new EntryDetailsRVAdapter(result, SaveCardActivity.this);
+                DataObjectCardEntry cardEntry = new DataObjectCardEntry("", "");
+                entryDetailsRVAdapter.addItem(cardEntry, 0);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+//        loading = new Dialog(this, R.style.MyInvisibleDialog);
+//        loading.setCancelable(false);
+//        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         mLoadingView = (LoadingView) findViewById(R.id.loading_view_repeat);
         int marvel_1 = R.drawable.marvel_1;
@@ -181,6 +206,10 @@ public class SaveCardActivity extends AppCompatActivity {
         Log.d(TAG, "entitiesSize: " + size);
         int x = 0;
         int i = 0;
+        if (entities.containsKey("Phone")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("Phone", entities.get("Phone"));
+            result.add(data);
+        }
         while (x != 1) {
             if (entities.containsKey("Phone" + i)) {
                 DataObjectCardEntry data = new DataObjectCardEntry("Phone", entities.get("Phone" + i));
@@ -192,6 +221,10 @@ public class SaveCardActivity extends AppCompatActivity {
             }
         }
 
+        if (entities.containsKey("Website")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("Website", entities.get("Website"));
+            result.add(data);
+        }
         x = 0;
         while (x != 1) {
             if (entities.containsKey("Website" + i)) {
@@ -204,6 +237,11 @@ public class SaveCardActivity extends AppCompatActivity {
             }
         }
 
+
+        if (entities.containsKey("Email")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("Email", entities.get("Email"));
+            result.add(data);
+        }
         x = 0;
         while (x != 1) {
             if (entities.containsKey("Email" + i)) {
@@ -215,9 +253,68 @@ public class SaveCardActivity extends AppCompatActivity {
                 i = 0;
             }
         }
+
+
+        if (entities.containsKey("Name")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("Name", entities.get("Name"));
+            result.add(data);
+        }
+        x = 0;
+        while (x != 1) {
+            if (entities.containsKey("Name" + i)) {
+                DataObjectCardEntry data = new DataObjectCardEntry("Name", entities.get("Name" + i));
+                result.add(data);
+                i++;
+            } else {
+                x = 1;
+                i = 0;
+            }
+        }
+
+
+        if (entities.containsKey("CompanyName")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("Company", entities.get("CompanyName"));
+            result.add(data);
+        }
+        x = 0;
+        while (x != 1) {
+            if (entities.containsKey("CompanyName" + i)) {
+                DataObjectCardEntry data = new DataObjectCardEntry("Company", entities.get("CompanyName" + i));
+                result.add(data);
+                i++;
+            } else {
+                x = 1;
+                i = 0;
+            }
+        }
+
+
+        if (entities.containsKey("CompanyAdd")) {
+            DataObjectCardEntry data = new DataObjectCardEntry("CompanyAdd", entities.get("CompanyAdd"));
+            result.add(data);
+        }
+        x = 0;
+        while (x != 1) {
+            if (entities.containsKey("CompanyAdd" + i)) {
+                DataObjectCardEntry data = new DataObjectCardEntry("Address", entities.get("CompanyAdd" + i));
+                result.add(data);
+                i++;
+            } else {
+                x = 1;
+                i = 0;
+            }
+        }
+
+//        if(entities.containsKey("NewNo"))
+        {
+//            int yet = Integer.parseInt(entities.get("NewNo"));
+//            EntryDetailsRVAdapter entryDetailsRVAdapter = new EntryDetailsRVAdapter(result,this);
+//            DataObjectCardEntry cardEntry = new DataObjectCardEntry("","");
+//            entryDetailsRVAdapter.addItem(cardEntry,0);
+        }
+        this.result = result;
         return result;
     }
-
 
     private Bitmap GetBinaryBitmap(Bitmap bitmap_src) {
         Bitmap bitmap_new = bitmap_src.copy(bitmap_src.getConfig(), true);
@@ -254,9 +351,137 @@ public class SaveCardActivity extends AppCompatActivity {
         }
     }
 
+
+    public class tikaOpenIntro {
+
+        public String Tokens[];
+
+        public String namefind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+                sd = fd.toString();
+
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public String orgFind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream(
+                        "/storage/emulated/0/en-ner-organization.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+
+                sd = fd.toString();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public String locationFind(String cnt[]) {
+            InputStream is;
+            TokenNameFinderModel tnf;
+            NameFinderME nf;
+            String sd = "";
+            try {
+                is = new FileInputStream(
+                        "/storage/emulated/0/en-ner-location.bin");
+
+                tnf = new TokenNameFinderModel(is);
+                nf = new NameFinderME(tnf);
+                Span sp[] = nf.find(cnt);
+                String a[] = Span.spansToStrings(sp, cnt);
+                StringBuilder fd = new StringBuilder();
+                int l = a.length;
+
+                for (int j = 0; j < l; j++) {
+                    fd = fd.append(a[j] + "\n");
+                }
+
+                sd = fd.toString();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return sd;
+        }
+
+        public void tokenization(String tokens) {
+
+            InputStream is;
+            TokenizerModel tm;
+
+            try {
+                is = new FileInputStream("/storage/emulated/0/en-token.bin");
+                tm = new TokenizerModel(is);
+                Tokenizer tz = new TokenizerME(tm);
+                Tokens = tz.tokenize(tokens);
+
+                for (int i = 0; i < Tokens.length; i++) {
+                    Log.d(TAG, "tokens: " + Tokens[i]);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     public class extractOCR extends AsyncTask<Void, Void, Void> {
 
-        private int mInterval = 2000;
+        private int mInterval = 1500;
         Runnable statusChecker = new Runnable() {
             @Override
             public void run() {
@@ -272,7 +497,7 @@ public class SaveCardActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            loading.show();
+//            loading.show();
             startRepeatingTask();
 
             super.onPreExecute();
@@ -381,6 +606,23 @@ public class SaveCardActivity extends AppCompatActivity {
 
             //WEB PAGE EXTRACTION ENDS
 
+            SaveCardActivity.tikaOpenIntro toi = new SaveCardActivity.tikaOpenIntro();
+
+            toi.tokenization(binaryText);           // try here the converted text also
+
+            String names = toi.namefind(toi.Tokens);
+//            String org = toi.orgFind(toi.Tokens);
+//            String location = toi.locationFind(toi.Tokens);
+            if (names != null) {
+                entities.put("Name", names);
+            }
+
+//            entities.put("CompanyName", org);
+//            entities.put("CompanyAdd", location);
+
+            Log.d(TAG, "person name is : " + names);
+//            Log.d(TAG, "organization name: " + org);
+//            Log.d(TAG, "location is: " + location);
             return null;
         }
 
@@ -389,7 +631,7 @@ public class SaveCardActivity extends AppCompatActivity {
             adapter = new EntryDetailsRVAdapter(getDataSet(), SaveCardActivity.this);
             rvEntryDetails.setAdapter(adapter);
 
-            loading.hide();
+//            loading.hide();
             stopRepeatingTask();
             mLoadingView.setVisibility(View.GONE);
             mLoadViewLong.setVisibility(View.GONE);

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <EditText
                 android:id="@+id/entry_type"
                 android:text="Phone"
                 android:textSize="20dp"
@@ -27,14 +27,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TextView
+            <EditText
                 android:id="@+id/entry_detail"
                 android:layout_below="@id/entry_type"
                 android:layout_marginTop="10dp"
                 android:textSize="20dp"
                 android:text="Entry Details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
 
             <ImageView
                 android:id="@+id/entry_img"

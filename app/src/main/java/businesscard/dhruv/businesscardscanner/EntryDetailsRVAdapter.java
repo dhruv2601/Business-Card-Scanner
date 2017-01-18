@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,14 +32,14 @@ public class EntryDetailsRVAdapter
             implements View
             .OnClickListener {
         ImageView imageEntryType;
-        TextView txtEntryType;
-        TextView txtEntryDetails;
+        EditText txtEntryType;
+        EditText txtEntryDetails;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             imageEntryType = (ImageView) itemView.findViewById(R.id.entry_img);
-            txtEntryType = (TextView) itemView.findViewById(R.id.entry_type);
-            txtEntryDetails = (TextView) itemView.findViewById(R.id.entry_detail);
+            txtEntryType = (EditText) itemView.findViewById(R.id.entry_type);
+            txtEntryDetails = (EditText) itemView.findViewById(R.id.entry_detail);
 
             Log.d(TAG,"insideDataObjectHolder");
 
@@ -63,6 +64,7 @@ public class EntryDetailsRVAdapter
             {
                 // web view
             }
+
             myClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
@@ -95,30 +97,31 @@ public class EntryDetailsRVAdapter
         holder.txtEntryDetails.setText(mCardSet.get(position).getEntryDetails());
 
         Log.d(TAG,"entryDetails: "+mCardSet.get(position).getEntryType()+"\n"+mCardSet.get(position).getEntryDetails());
-        holder.imageEntryType.setImageResource(R.drawable.call);
 
-        // ab yahan on the basis of what the mCardSet.get(position).getTxtName() hoga us basis par image will be set
-
-        if(mCardSet.get(position).getEntryType().equals("Phone"))
-        {
-            holder.imageEntryType.setImageResource(R.drawable.call);
-        }
-        else if(mCardSet.get(position).getEntryType().equals("Email"))
-        {
-            holder.imageEntryType.setImageResource(R.drawable.email);
-        }
-        else if(mCardSet.get(position).getEntryType().equals("Company"))
-        {
-            holder.imageEntryType.setImageResource(R.drawable.bussiness);
-        }
-        else if(mCardSet.get(position).getEntryType().equals("Website"))
-        {
-            holder.imageEntryType.setImageResource(R.drawable.wifi);
-        }
-        else
-        {
-            holder.imageEntryType.setImageResource(R.drawable.bussiness);
-        }
+//        holder.imageEntryType.setImageResource(R.drawable.call);
+//
+//        // ab yahan on the basis of what the mCardSet.get(position).getTxtName() hoga us basis par image will be set
+//
+//        if(mCardSet.get(position).getEntryType().equals("Phone"))
+//        {
+//            holder.imageEntryType.setImageResource(R.drawable.call);
+//        }
+//        else if(mCardSet.get(position).getEntryType().equals("Email"))
+//        {
+//            holder.imageEntryType.setImageResource(R.drawable.email);
+//        }
+//        else if(mCardSet.get(position).getEntryType().equals("Company"))
+//        {
+//            holder.imageEntryType.setImageResource(R.drawable.bussiness);
+//        }
+//        else if(mCardSet.get(position).getEntryType().equals("Website"))
+//        {
+//            holder.imageEntryType.setImageResource(R.drawable.wifi);
+//        }
+//        else
+//        {
+//            holder.imageEntryType.setImageResource(R.drawable.bussiness);
+//        }
     }
 
     public void addItem(DataObjectCardEntry cardObject, int index) {

@@ -60,7 +60,7 @@ public class AllCardsFragment extends Fragment {
     // Save each card info into shared prefs and build the arrayList using them every time and in case they are empty sync up to check if the user has deleted the data
 
     private ArrayList<CardObject1> getDataSet() {
-        ArrayList results = new ArrayList<CardObject>();
+        ArrayList results = new ArrayList<CardObject1>();
         for (int index = 0; index < 2; index++) {
             CardObject1 obj = new CardObject1(0, "Dhruv Rathi", "CEO Bitch", "BCScanner"); // make a map of images and the service and provide that here
             Log.d(TAG, "index:: " + index);

@@ -74,7 +74,8 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = new Intent(LoginActivity.this, MainActivity1.class);
             LoginActivity.this.finish();
             startActivity(i);
-        } else {
+        }
+        else {
 //            final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
 //            startService(serviceIntent);
 

@@ -1,12 +1,14 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,14 +19,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +41,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.saeid.fabloading.LoadingView;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.Tokenizer;
@@ -59,9 +63,9 @@ public class SaveCardActivity extends AppCompatActivity {
     public HashMap<String, String> entities;
     private FloatingActionButton fabSaveContact;
 
-    private LoadingView mLoadingView;
-    private LoadingView mLoadViewLong;
-    private LoadingView mLoadViewNoRepeat;
+//    private LoadingView mLoadingView;
+//    private LoadingView mLoadViewLong;
+//    private LoadingView mLoadViewNoRepeat;
 
     public Handler mHandler;
     //    public Dialog loading;
@@ -70,6 +74,8 @@ public class SaveCardActivity extends AppCompatActivity {
 
     public static final int PICK_IMAGE_REQUEST = 2601;
     private ArrayList<DataObjectCardEntry> result;
+    public static String type[] = new String[30];
+    public static String desc[] = new String[30];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,26 @@ public class SaveCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // edit text mn jo data edit hua hai save that
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                cardBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] data = stream.toByteArray();
+                String convertByte = "";
+
+                int i = 0;
+                SharedPreferences pref = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
+                SharedPreferences.Editor editor = pref.edit();
+                int totalCards = pref.getInt("CardNo", 0);
+                int numEntities = entities.size();
+                for (i = 0; i <= numEntities; i++) {
+                    editor.putString("Card" + (totalCards + 1) + "Detail" + i, entities.get(i));
+                }
+                convertByte = Base64.encodeToString(data, Base64.DEFAULT);
+                editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
+
+                ++totalCards;
+                editor.putInt("CardNo", totalCards);
+                editor.commit();
             }
         });
 
@@ -112,17 +138,20 @@ public class SaveCardActivity extends AppCompatActivity {
         addAnotherField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int yet=0;
-                if(entities.containsKey("NewNo"))
-                {
+                int yet = 0;
+                if (entities.containsKey("NewNo")) {
                     yet = Integer.parseInt(entities.get("NewNo"));
                 }
-                entities.put("NewField"+(++yet),"");
-                entities.put("NewNo",String.valueOf(yet));
+
+                entities.put("NewField" + (++yet), "");
+                entities.put("NewNo", String.valueOf(yet));
 
                 EntryDetailsRVAdapter entryDetailsRVAdapter = new EntryDetailsRVAdapter(result, SaveCardActivity.this);
                 DataObjectCardEntry cardEntry = new DataObjectCardEntry("", "");
-                entryDetailsRVAdapter.addItem(cardEntry, 0);
+
+                result.add(cardEntry);
+//                entryDetailsRVAdapter.addItem(cardEntry, result.size());
+
                 adapter.notifyDataSetChanged();
             }
         });
@@ -132,32 +161,40 @@ public class SaveCardActivity extends AppCompatActivity {
 //        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        mLoadingView = (LoadingView) findViewById(R.id.loading_view_repeat);
-        int marvel_1 = R.drawable.marvel_1;
-        int marvel_2 = R.drawable.marvel_4;
-        int marvel_3 = R.drawable.marvel_3;
-        int marvel_4 = R.drawable.marvel_2;
 
-        mLoadingView.addAnimation(Color.parseColor("#FFD200"), marvel_1,
-                LoadingView.FROM_LEFT);
-        mLoadingView.addAnimation(Color.parseColor("#2F5DA9"), marvel_2,
-                LoadingView.FROM_TOP);
-        mLoadingView.addAnimation(Color.parseColor("#FF4218"), marvel_3,
-                LoadingView.FROM_RIGHT);
-        mLoadingView.addAnimation(Color.parseColor("#C7E7FB"), marvel_4,
-                LoadingView.FROM_BOTTOM);
-
-        mLoadViewNoRepeat = (LoadingView) findViewById(R.id.loading_view);
-        mLoadViewNoRepeat.addAnimation(Color.parseColor("#2F5DA9"), marvel_2, LoadingView.FROM_LEFT);
-        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_LEFT);
-        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FFD200"), marvel_1, LoadingView.FROM_RIGHT);
-        mLoadViewNoRepeat.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_RIGHT);
-
-        mLoadViewLong = (LoadingView) findViewById(R.id.loading_view_long);
-        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
-        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
-        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
-        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
+//        mLoadingView = (LoadingView) findViewById(R.id.loading_view_repeat);
+//
+//        int marvel_1 = R.drawable.marvel_1;
+//        int marvel_2 = R.drawable.marvel_4;
+//        int marvel_3 = R.drawable.marvel_3;
+//        int marvel_4 = R.drawable.marvel_2;
+//
+//        mLoadingView.addAnimation(Color.parseColor("#FFD200"), marvel_1,
+//                LoadingView.FROM_LEFT);
+//        mLoadingView.addAnimation(Color.parseColor("#2F5DA9"), marvel_2,
+//                LoadingView.FROM_TOP);
+//        mLoadingView.addAnimation(Color.parseColor("#FF4218"), marvel_3,
+//                LoadingView.FROM_RIGHT);
+//        mLoadingView.addAnimation(Color.parseColor("#C7E7FB"), marvel_4,
+//                LoadingView.FROM_BOTTOM);
+//
+//        mLoadViewNoRepeat = (LoadingView)
+//
+//                findViewById(R.id.loading_view);
+//
+//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#2F5DA9"), marvel_2, LoadingView.FROM_LEFT);
+//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_LEFT);
+//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FFD200"), marvel_1, LoadingView.FROM_RIGHT);
+//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_RIGHT);
+//
+//        mLoadViewLong = (LoadingView)
+//
+//                findViewById(R.id.loading_view_long);
+//
+//        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
+//        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
+//        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
+//        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
 
         SharedPreferences preferences = this.getSharedPreferences("SavedCards", 0);
         cardNo = preferences.getInt("CardNo", 1);
@@ -237,7 +274,6 @@ public class SaveCardActivity extends AppCompatActivity {
             }
         }
 
-
         if (entities.containsKey("Email")) {
             DataObjectCardEntry data = new DataObjectCardEntry("Email", entities.get("Email"));
             result.add(data);
@@ -253,7 +289,6 @@ public class SaveCardActivity extends AppCompatActivity {
                 i = 0;
             }
         }
-
 
         if (entities.containsKey("Name")) {
             DataObjectCardEntry data = new DataObjectCardEntry("Name", entities.get("Name"));
@@ -287,7 +322,6 @@ public class SaveCardActivity extends AppCompatActivity {
                 i = 0;
             }
         }
-
 
         if (entities.containsKey("CompanyAdd")) {
             DataObjectCardEntry data = new DataObjectCardEntry("CompanyAdd", entities.get("CompanyAdd"));
@@ -462,7 +496,6 @@ public class SaveCardActivity extends AppCompatActivity {
 
             InputStream is;
             TokenizerModel tm;
-
             try {
                 is = new FileInputStream("/storage/emulated/0/en-token.bin");
                 tm = new TokenizerModel(is);
@@ -481,34 +514,17 @@ public class SaveCardActivity extends AppCompatActivity {
 
     public class extractOCR extends AsyncTask<Void, Void, Void> {
 
-        private int mInterval = 1500;
-        Runnable statusChecker = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mLoadingView.startAnimation();
-                    mLoadViewLong.startAnimation();
-                    mLoadViewNoRepeat.startAnimation();
-                } finally {
-                    mHandler.postDelayed(statusChecker, mInterval);
-                }
-            }
-        };
-
+        ProgressDialog pDial = new ProgressDialog(SaveCardActivity.this);
         @Override
         protected void onPreExecute() {
-//            loading.show();
-            startRepeatingTask();
-
+            pDial.setIcon(R.drawable.appicon);
+            pDial.setMessage("Extracting Details");
+            pDial.setCancelable(false);
+            pDial.setTitle("Scanning Card");
+//            pDial.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);        // check if error
+//            pDial.incrementProgressBy(10);
+            pDial.show();
             super.onPreExecute();
-        }
-
-        void startRepeatingTask() {
-            statusChecker.run();
-        }
-
-        void stopRepeatingTask() {
-            mHandler.removeCallbacks(statusChecker);
         }
 
         @Override
@@ -588,6 +604,7 @@ public class SaveCardActivity extends AppCompatActivity {
                             y++;
                         }
                     }
+
                     entities.put("Email" + (no++), email);
                 }
             }
@@ -610,17 +627,17 @@ public class SaveCardActivity extends AppCompatActivity {
 
             toi.tokenization(binaryText);           // try here the converted text also
 
-            String names = toi.namefind(toi.Tokens);
+//            String names = toi.namefind(toi.Tokens);
 //            String org = toi.orgFind(toi.Tokens);
 //            String location = toi.locationFind(toi.Tokens);
-            if (names != null) {
-                entities.put("Name", names);
-            }
+//            if (names != null) {
+//                entities.put("Name", names);
+//            }
 
 //            entities.put("CompanyName", org);
 //            entities.put("CompanyAdd", location);
 
-            Log.d(TAG, "person name is : " + names);
+//            Log.d(TAG, "person name is : " + names);
 //            Log.d(TAG, "organization name: " + org);
 //            Log.d(TAG, "location is: " + location);
             return null;
@@ -630,12 +647,7 @@ public class SaveCardActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             adapter = new EntryDetailsRVAdapter(getDataSet(), SaveCardActivity.this);
             rvEntryDetails.setAdapter(adapter);
-
-//            loading.hide();
-            stopRepeatingTask();
-            mLoadingView.setVisibility(View.GONE);
-            mLoadViewLong.setVisibility(View.GONE);
-            mLoadViewNoRepeat.setVisibility(View.GONE);
+            pDial.dismiss();
 
             super.onPostExecute(aVoid);
         }

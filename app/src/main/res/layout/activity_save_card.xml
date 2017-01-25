@@ -37,8 +37,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-98dp"
             android:elevation="8dp"
-            android:visibility="gone"
             android:src="@drawable/useravatar"
+            android:visibility="gone"
             app:layout_scrollFlags="scroll" />
 
     </android.support.design.widget.AppBarLayout>

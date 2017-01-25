@@ -3,10 +3,13 @@ package businesscard.dhruv.businesscardscanner;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
@@ -15,12 +18,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +36,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.lapism.searchview.SearchView;
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.BufferedReader;
@@ -67,6 +76,8 @@ public class MainActivity1 extends AppCompatActivity {
     public static SharedPreferences sref;
     public static boolean hasEntered;
     public InputStream isPerson;
+    private boolean b;
+    public int totalCardNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +95,17 @@ public class MainActivity1 extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(getResources().getColor(R.color.black));
+        }
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        b = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
+        if (!b) {
+            // doing the cloud backup every time app connected to net
+
+
+
         }
 
         sref = MainActivity1.this.getSharedPreferences("entered", 0);
@@ -177,7 +199,7 @@ public class MainActivity1 extends AppCompatActivity {
         Log.d(TAG, "setAdapter");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(2);
 
         tabLayout.getTabAt(0).setText("My Card");
         tabLayout.getTabAt(1).setText("Cards");
@@ -324,4 +346,35 @@ public class MainActivity1 extends AppCompatActivity {
         }
         super.onBackPressed();
     }
+
+    public class cloudBackup extends AsyncTask<Void,Void,Void>
+    {
+        ParseUser user = ParseUser.getCurrentUser();
+        String userName = user.getUsername();
+        String userMail = user.getEmail();
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            SharedPreferences pref = MainActivity1.this.getSharedPreferences("AllCards",0);
+            if(pref.contains("CardNo"))
+            {
+                totalCardNum = pref.getInt("CardNo",0);
+                String cardPhoto[] = new String[totalCardNum];
+
+
+                for(int i=1;i<=totalCardNum;i++)
+                {
+                    cardPhoto[i] = pref.getString("Card"+i+"Photo",null);
+                    byte[] uploadThis = Base64.decode(cardPhoto[i], Base64.DEFAULT);
+                }
+            }
+
+
+            return null;
+        }
+    }
+
+
 }

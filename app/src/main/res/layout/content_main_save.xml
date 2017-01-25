@@ -21,7 +21,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_entry_details"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/btn_add_detail"
@@ -51,44 +53,5 @@
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view_long"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_weight="1"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true" />
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="80dp"
-        android:layout_weight="1"
-        android:scaleX="2.5"
-        android:scaleY="2.5"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true" />
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/loading_view_repeat"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:layout_weight="1"
-        android:scaleX="4"
-        android:scaleY="4"
-        app:mfl_duration="400"
-        app:mfl_onclickLoading="true"
-        app:mfl_repeat="1" />
 
 </RelativeLayout>

@@ -34,7 +34,7 @@
                 android:textSize="20dp"
                 android:text="Entry Details"
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/entry_img"

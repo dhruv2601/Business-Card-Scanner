@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +28,14 @@ public class EntryDetailsRVAdapter
     public static final String TAG = "EntryDetailsRvAdapter";
     public static ArrayList<DataObjectCardEntry> mCardSet;
     private static MyClickListener myClickListener;
-    private Context context;
+    public Context context;
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
         ImageView imageEntryType;
-        EditText txtEntryType;
-        EditText txtEntryDetails;
+        public static EditText txtEntryType;
+        public static EditText txtEntryDetails;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
@@ -41,27 +43,57 @@ public class EntryDetailsRVAdapter
             txtEntryType = (EditText) itemView.findViewById(R.id.entry_type);
             txtEntryDetails = (EditText) itemView.findViewById(R.id.entry_detail);
 
-            Log.d(TAG,"insideDataObjectHolder");
+            txtEntryDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCardSet.get(getAdapterPosition()).setEntryDetails(txtEntryDetails.getText().toString());
+                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+                }
+            });
+
+            txtEntryType.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCardSet.get(getAdapterPosition()).setEntryType(txtEntryType.getText().toString());
+                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+                }
+            });
+
+            Log.d(TAG, "insideDataObjectHolder");
 
             itemView.setOnClickListener(this);
         }
 
+
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             // yahan jab alag alag things pe alag alag onClickListener
 
-            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Phone"))
-            {
+//            txtEntryDetails.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mCardSet.get(getAdapterPosition()).setEntryDetails(txtEntryDetails.getText().toString());
+//                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+//                }
+//            });
+//
+//            txtEntryType.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mCardSet.get(getAdapterPosition()).setEntryType(txtEntryType.getText().toString());
+//                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+//                }
+//            });
+
+            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Phone")) {
                 Intent i = new Intent(Intent.ACTION_DIAL);
-                i.setData(Uri.parse("tel:"+mCardSet.get(getAdapterPosition()).getEntryDetails()));
+                i.setData(Uri.parse("tel:" + mCardSet.get(getAdapterPosition()).getEntryDetails()));
             }
-            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Email"))
-            {
-                Intent i = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto",mCardSet.get(getAdapterPosition()).getEntryDetails(),null));
-                v.getContext().startActivity(Intent.createChooser(i,"Send Email..."));
+            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Email")) {
+                Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", mCardSet.get(getAdapterPosition()).getEntryDetails(), null));
+                v.getContext().startActivity(Intent.createChooser(i, "Send Email..."));
             }
-            if(mCardSet.get(getAdapterPosition()).getEntryType().equals("Website"))
-            {
+            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Website")) {
                 // web view
             }
 
@@ -75,7 +107,7 @@ public class EntryDetailsRVAdapter
 
     public EntryDetailsRVAdapter(ArrayList<DataObjectCardEntry> myCardSet, Context context) {
         mCardSet = myCardSet;
-        Log.d(TAG,"insideEntryDetailsRvAdapter");
+        Log.d(TAG, "insideEntryDetailsRvAdapter");
         this.context = context;
     }
 
@@ -85,18 +117,52 @@ public class EntryDetailsRVAdapter
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_individ_entry, parent, false);
 
-        Log.d(TAG,"insideEntryPnCreateViewHolder");
+        Log.d(TAG, "insideEntryPnCreateViewHolder");
 
         DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
         return dataObjectHolder;
     }
 
     @Override
-    public void onBindViewHolder(DataObjectHolder holder, int position) {
+    public void onBindViewHolder(final DataObjectHolder holder, final int position) {
         holder.txtEntryType.setText(mCardSet.get(position).getEntryType());
         holder.txtEntryDetails.setText(mCardSet.get(position).getEntryDetails());
 
-        Log.d(TAG,"entryDetails: "+mCardSet.get(position).getEntryType()+"\n"+mCardSet.get(position).getEntryDetails());
+        holder.txtEntryType.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                SaveCardActivity.type[position] = holder.txtEntryType.getText().toString();     // think this might be wrong
+            }
+        });
+
+        holder.txtEntryDetails.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                SaveCardActivity.desc[position] = holder.txtEntryDetails.getText().toString();   // think this might be wrong
+            }
+        });
+
+        Log.d(TAG, "entryDetails: " + mCardSet.get(position).getEntryType() + "\n" + mCardSet.get(position).getEntryDetails());
 
 //        holder.imageEntryType.setImageResource(R.drawable.call);
 //
@@ -134,8 +200,13 @@ public class EntryDetailsRVAdapter
         notifyItemRemoved(index);
     }
 
+    public DataObjectCardEntry getData(int position) {
+        return mCardSet.get(position);
+    }
+
     @Override
     public int getItemCount() {
+        Log.d(TAG, "itemsSize: " + mCardSet.size());
         return mCardSet.size();
     }
 

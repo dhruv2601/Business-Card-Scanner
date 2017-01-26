@@ -38,7 +38,7 @@
             <TextView
                 android:id="@+id/txt_position_all_card"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="0dp"
                 android:layout_below="@id/txt_name_all_card"
                 android:layout_marginLeft="35dp"
                 android:layout_marginTop="10dp"
@@ -47,7 +47,7 @@
             <TextView
                 android:id="@+id/txt_company_all_card"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/txt_position_all_card"
                 android:layout_marginLeft="35dp"
                 android:layout_marginTop="6dp"

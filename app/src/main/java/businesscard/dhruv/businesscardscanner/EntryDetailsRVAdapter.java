@@ -109,17 +109,17 @@ public class EntryDetailsRVAdapter
 //                }
 //            });
 
-            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Phone")) {
-                Intent i = new Intent(Intent.ACTION_DIAL);
-                i.setData(Uri.parse("tel:" + mCardSet.get(getAdapterPosition()).getEntryDetails()));
-            }
-            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Email")) {
-                Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", mCardSet.get(getAdapterPosition()).getEntryDetails(), null));
-                v.getContext().startActivity(Intent.createChooser(i, "Send Email..."));
-            }
-            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Website")) {
-                // web view
-            }
+//            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Phone")) {
+//                Intent i = new Intent(Intent.ACTION_DIAL);
+//                i.setData(Uri.parse("tel:" + mCardSet.get(getAdapterPosition()).getEntryDetails()));
+//            }
+//            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Email")) {
+//                Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", mCardSet.get(getAdapterPosition()).getEntryDetails(), null));
+//                v.getContext().startActivity(Intent.createChooser(i, "Send Email..."));
+//            }
+//            if (mCardSet.get(getAdapterPosition()).getEntryType().equals("Website")) {
+//                // web view
+//            }
 
             myClickListener.onItemClick(getAdapterPosition(), v);
         }

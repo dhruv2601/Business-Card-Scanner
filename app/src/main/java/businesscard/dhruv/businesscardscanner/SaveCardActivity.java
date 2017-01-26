@@ -112,10 +112,12 @@ public class SaveCardActivity extends AppCompatActivity {
                     editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
                     editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
                 }
+
                 convertByte = Base64.encodeToString(data, Base64.DEFAULT);
                 editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
 
                 ++totalCards;
+                editor.putInt("CardEnt"+totalCards,result.size()-1);
                 editor.putInt("CardNo", totalCards);
                 editor.commit();
                 Log.d(TAG,"pref:: "+pref.getString("Card"+String.valueOf(totalCards)+"EntryType"+1,"null hai bc"));
@@ -205,6 +207,11 @@ public class SaveCardActivity extends AppCompatActivity {
         Log.d(TAG, "entitiesSize: " + size);
         int x = 0;
         int i = 0;
+        DataObjectCardEntry dataName = new DataObjectCardEntry("Name","");
+        result.add(dataName);
+        DataObjectCardEntry dataComp = new DataObjectCardEntry("Company","");
+        result.add(dataComp);
+
         if (entities.containsKey("Phone")) {
             DataObjectCardEntry data = new DataObjectCardEntry("Phone", entities.get("Phone"));
             result.add(data);

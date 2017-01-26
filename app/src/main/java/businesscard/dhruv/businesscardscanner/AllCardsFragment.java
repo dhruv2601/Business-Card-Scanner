@@ -1,6 +1,7 @@
 package businesscard.dhruv.businesscardscanner;
 
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -61,10 +63,32 @@ public class AllCardsFragment extends Fragment {
 
     private ArrayList<CardObject1> getDataSet() {
         ArrayList results = new ArrayList<CardObject1>();
-        for (int index = 0; index < 2; index++) {
-            CardObject1 obj = new CardObject1(0, "Dhruv Rathi", "CEO Bitch", "BCScanner"); // make a map of images and the service and provide that here
-            Log.d(TAG, "index:: " + index);
-            results.add(index, obj);
+
+        SharedPreferences pref = getContext().getSharedPreferences("AllCards", 0);
+        int x = pref.getInt("CardNo", 0);
+        if (x == 0) {
+            CardObject1 object1 = new CardObject1(0,"John Doe","CEO","BC Scanner");
+            results.add(object1);
+        } else {
+            int totalCards = pref.getInt("CardNo", 1);
+            int index = 0;
+
+            for (int i = 1; i <= totalCards; i++) {
+                int totalEnt = pref.getInt("CardEnt" + i, 0);
+                String name = "";
+                String company = "";
+
+                for (int j = 0; j <= totalEnt; j++) {
+                    String entType = pref.getString("Card" + String.valueOf(i) + "EntryType" + j, "");
+                    if (entType.equals("Name")) {
+                        name = pref.getString("Card" + String.valueOf(i) + "EntryDetail" + j, "");
+                    } else if (entType.equals("Company")) {
+                        company = pref.getString("Card" + String.valueOf(i) + "EntryDetail" + j, "");
+                    }
+                }
+                CardObject1 obj = new CardObject1(0, name, "", company); // make a map of images and the service and provide that here
+                results.add(index++, obj);
+            }
         }
         return results;
     }

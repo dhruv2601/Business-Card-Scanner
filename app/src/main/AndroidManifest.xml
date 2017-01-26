@@ -78,7 +78,10 @@
 
         <activity android:name=".ChatFragment" />
         <activity android:name=".FullImage" />
-        <activity android:name=".SaveCardActivity"></activity>
+        <activity
+            android:name=".SaveCardActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
     </application>
 
 </manifest>

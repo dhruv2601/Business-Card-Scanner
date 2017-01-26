@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
@@ -63,12 +64,7 @@ public class SaveCardActivity extends AppCompatActivity {
     public HashMap<String, String> entities;
     private FloatingActionButton fabSaveContact;
 
-//    private LoadingView mLoadingView;
-//    private LoadingView mLoadViewLong;
-//    private LoadingView mLoadViewNoRepeat;
-
     public Handler mHandler;
-    //    public Dialog loading;
     private de.hdodenhof.circleimageview.CircleImageView imgPersonImg;
     private Button addAnotherField;
 
@@ -112,8 +108,9 @@ public class SaveCardActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = pref.edit();
                 int totalCards = pref.getInt("CardNo", 0);
                 int numEntities = entities.size();
-                for (i = 0; i <= numEntities; i++) {
-                    editor.putString("Card" + (totalCards + 1) + "Detail" + i, entities.get(i));
+                for (i = 0; i < result.size(); i++) {
+                    editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
+                    editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
                 }
                 convertByte = Base64.encodeToString(data, Base64.DEFAULT);
                 editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
@@ -121,6 +118,9 @@ public class SaveCardActivity extends AppCompatActivity {
                 ++totalCards;
                 editor.putInt("CardNo", totalCards);
                 editor.commit();
+                Log.d(TAG,"pref:: "+pref.getString("Card"+String.valueOf(totalCards)+"EntryType"+1,"null hai bc"));
+
+                //Now pass an intent to another activity
             }
         });
 
@@ -138,6 +138,7 @@ public class SaveCardActivity extends AppCompatActivity {
         addAnotherField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(SaveCardActivity.this, "Touch the TICKS on right after done.", Toast.LENGTH_SHORT).show();
                 int yet = 0;
                 if (entities.containsKey("NewNo")) {
                     yet = Integer.parseInt(entities.get("NewNo"));
@@ -146,55 +147,16 @@ public class SaveCardActivity extends AppCompatActivity {
                 entities.put("NewField" + (++yet), "");
                 entities.put("NewNo", String.valueOf(yet));
 
-                EntryDetailsRVAdapter entryDetailsRVAdapter = new EntryDetailsRVAdapter(result, SaveCardActivity.this);
                 DataObjectCardEntry cardEntry = new DataObjectCardEntry("", "");
 
                 result.add(cardEntry);
-//                entryDetailsRVAdapter.addItem(cardEntry, result.size());
+                for (int i = 0; i < result.size(); i++) {
+                    Log.d(TAG, "resultArray: " + result.get(i).getEntryDetails());
+                }
 
                 adapter.notifyDataSetChanged();
             }
         });
-
-//        loading = new Dialog(this, R.style.MyInvisibleDialog);
-//        loading.setCancelable(false);
-//        loading.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-//        mLoadingView = (LoadingView) findViewById(R.id.loading_view_repeat);
-//
-//        int marvel_1 = R.drawable.marvel_1;
-//        int marvel_2 = R.drawable.marvel_4;
-//        int marvel_3 = R.drawable.marvel_3;
-//        int marvel_4 = R.drawable.marvel_2;
-//
-//        mLoadingView.addAnimation(Color.parseColor("#FFD200"), marvel_1,
-//                LoadingView.FROM_LEFT);
-//        mLoadingView.addAnimation(Color.parseColor("#2F5DA9"), marvel_2,
-//                LoadingView.FROM_TOP);
-//        mLoadingView.addAnimation(Color.parseColor("#FF4218"), marvel_3,
-//                LoadingView.FROM_RIGHT);
-//        mLoadingView.addAnimation(Color.parseColor("#C7E7FB"), marvel_4,
-//                LoadingView.FROM_BOTTOM);
-//
-//        mLoadViewNoRepeat = (LoadingView)
-//
-//                findViewById(R.id.loading_view);
-//
-//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#2F5DA9"), marvel_2, LoadingView.FROM_LEFT);
-//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_LEFT);
-//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#FFD200"), marvel_1, LoadingView.FROM_RIGHT);
-//        mLoadViewNoRepeat.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_RIGHT);
-//
-//        mLoadViewLong = (LoadingView)
-//
-//                findViewById(R.id.loading_view_long);
-//
-//        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
-//        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
-//        mLoadViewLong.addAnimation(Color.parseColor("#FF4218"), marvel_3, LoadingView.FROM_TOP);
-//        mLoadViewLong.addAnimation(Color.parseColor("#C7E7FB"), marvel_4, LoadingView.FROM_BOTTOM);
 
         SharedPreferences preferences = this.getSharedPreferences("SavedCards", 0);
         cardNo = preferences.getInt("CardNo", 1);
@@ -306,7 +268,6 @@ public class SaveCardActivity extends AppCompatActivity {
             }
         }
 
-
         if (entities.containsKey("CompanyName")) {
             DataObjectCardEntry data = new DataObjectCardEntry("Company", entities.get("CompanyName"));
             result.add(data);
@@ -384,7 +345,6 @@ public class SaveCardActivity extends AppCompatActivity {
             return Color.BLACK;
         }
     }
-
 
     public class tikaOpenIntro {
 
@@ -515,14 +475,13 @@ public class SaveCardActivity extends AppCompatActivity {
     public class extractOCR extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog pDial = new ProgressDialog(SaveCardActivity.this);
+
         @Override
         protected void onPreExecute() {
             pDial.setIcon(R.drawable.appicon);
             pDial.setMessage("Extracting Details");
             pDial.setCancelable(false);
             pDial.setTitle("Scanning Card");
-//            pDial.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);        // check if error
-//            pDial.incrementProgressBy(10);
             pDial.show();
             super.onPreExecute();
         }

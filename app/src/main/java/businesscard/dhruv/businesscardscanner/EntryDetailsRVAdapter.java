@@ -30,24 +30,29 @@ public class EntryDetailsRVAdapter
     private static MyClickListener myClickListener;
     public Context context;
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder
+    public class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
         ImageView imageEntryType;
-        public static EditText txtEntryType;
-        public static EditText txtEntryDetails;
+        public EditText txtEntryType;
+        public EditText txtEntryDetails;
+        public ImageView addEntry;
+        public ImageView delEntry;
+
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             imageEntryType = (ImageView) itemView.findViewById(R.id.entry_img);
             txtEntryType = (EditText) itemView.findViewById(R.id.entry_type);
             txtEntryDetails = (EditText) itemView.findViewById(R.id.entry_detail);
+            addEntry = (ImageView) itemView.findViewById(R.id.add_entry);
+            delEntry = (ImageView) itemView.findViewById(R.id.remove_entry);
 
             txtEntryDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mCardSet.get(getAdapterPosition()).setEntryDetails(txtEntryDetails.getText().toString());
-                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+                    Log.d(TAG, "entryDetails: " + txtEntryDetails.getText().toString());
                 }
             });
 
@@ -55,7 +60,26 @@ public class EntryDetailsRVAdapter
                 @Override
                 public void onClick(View view) {
                     mCardSet.get(getAdapterPosition()).setEntryType(txtEntryType.getText().toString());
-                    Log.d(TAG,"entryDetails: "+txtEntryDetails.getText().toString());
+                    Log.d(TAG, "entryDetails: " + txtEntryDetails.getText().toString());
+                }
+            });
+
+            addEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCardSet.get(getAdapterPosition()).setEntryDetails(txtEntryDetails.getText().toString());
+                    Log.d(TAG, "entryDetails: " + txtEntryDetails.getText().toString());
+
+                    mCardSet.get(getAdapterPosition()).setEntryType(txtEntryType.getText().toString());
+                    Log.d(TAG, "entryDetails: " + txtEntryType.getText().toString());
+                }
+            });
+
+            delEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCardSet.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 
@@ -206,7 +230,7 @@ public class EntryDetailsRVAdapter
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "itemsSize: " + mCardSet.size());
+//        Log.d(TAG, "itemsSize: " + mCardSet.size());
         return mCardSet.size();
     }
 

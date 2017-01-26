@@ -4,6 +4,7 @@
     android:id="@+id/activity_full_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context="businesscard.dhruv.businesscardscanner.FullImage">
 
     <ImageView
@@ -11,6 +12,4 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="250dp" />
-
-
 </RelativeLayout>

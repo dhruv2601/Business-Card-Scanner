@@ -39,7 +39,6 @@ public class EntryDetailsRVAdapter
         public ImageView addEntry;
         public ImageView delEntry;
 
-
         public DataObjectHolder(View itemView) {
             super(itemView);
             imageEntryType = (ImageView) itemView.findViewById(R.id.entry_img);
@@ -85,9 +84,7 @@ public class EntryDetailsRVAdapter
 
             Log.d(TAG, "insideDataObjectHolder");
 
-            itemView.setOnClickListener(this);
         }
-
 
         @Override
         public void onClick(final View v) {

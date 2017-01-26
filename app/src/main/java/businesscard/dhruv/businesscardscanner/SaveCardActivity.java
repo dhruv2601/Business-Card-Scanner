@@ -72,6 +72,7 @@ public class SaveCardActivity extends AppCompatActivity {
     private ArrayList<DataObjectCardEntry> result;
     public static String type[] = new String[30];
     public static String desc[] = new String[30];
+    private String imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +120,14 @@ public class SaveCardActivity extends AppCompatActivity {
                 ++totalCards;
                 editor.putInt("CardEnt"+totalCards,result.size()-1);
                 editor.putInt("CardNo", totalCards);
+                editor.putString("CardBitmap"+totalCards,convertByte);
                 editor.commit();
                 Log.d(TAG,"pref:: "+pref.getString("Card"+String.valueOf(totalCards)+"EntryType"+1,"null hai bc"));
 
-                //Now pass an intent to another activity
+                Intent intent = new Intent(view.getContext(),ShowCardDetails.class);
+                intent.putExtra("CardPosition",totalCards-1);
+                startActivity(intent);
+                SaveCardActivity.this.finish();
             }
         });
 
@@ -162,7 +167,7 @@ public class SaveCardActivity extends AppCompatActivity {
 
         SharedPreferences preferences = this.getSharedPreferences("SavedCards", 0);
         cardNo = preferences.getInt("CardNo", 1);
-        String imageUri = preferences.getString("ImageUri" + cardNo, "");
+        imageUri = preferences.getString("ImageUri" + cardNo, "");
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
@@ -190,6 +195,18 @@ public class SaveCardActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((EntryDetailsRVAdapter) adapter).setOnItemClickListener(new EntryDetailsRVAdapter
+                .MyClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Log.i(TAG, " Clicked on Item " + position);
+            }
+        });
     }
 
     private ArrayList<DataObjectCardEntry> getDataSet1() {

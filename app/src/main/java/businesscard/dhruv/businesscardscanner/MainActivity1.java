@@ -105,7 +105,6 @@ public class MainActivity1 extends AppCompatActivity {
             // doing the cloud backup every time app connected to net
 
 
-
         }
 
         sref = MainActivity1.this.getSharedPreferences("entered", 0);
@@ -167,9 +166,9 @@ public class MainActivity1 extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
-        tabLayout.addTab(tabLayout.newTab().setText("My Card"));    //0
+        tabLayout.addTab(tabLayout.newTab().setText("Chats"));    //0
         tabLayout.addTab(tabLayout.newTab().setText("Cards"));      //1
-        tabLayout.addTab(tabLayout.newTab().setText("Chats"));      //2
+        tabLayout.addTab(tabLayout.newTab().setText("Contacts"));      //2
 
         Log.d(TAG, "initAdapter");
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -199,11 +198,10 @@ public class MainActivity1 extends AppCompatActivity {
         Log.d(TAG, "setAdapter");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(2);
-
-        tabLayout.getTabAt(0).setText("My Card");
-        tabLayout.getTabAt(1).setText("Cards");
-        tabLayout.getTabAt(2).setText("Chats");
+        viewPager.setCurrentItem(1);
+        tabLayout.getTabAt(0).setText("CHATS");
+        tabLayout.getTabAt(1).setText("CARDS");
+        tabLayout.getTabAt(2).setText("CONTACTS");
 
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
@@ -347,8 +345,7 @@ public class MainActivity1 extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public class cloudBackup extends AsyncTask<Void,Void,Void>
-    {
+    public class cloudBackup extends AsyncTask<Void, Void, Void> {
         ParseUser user = ParseUser.getCurrentUser();
         String userName = user.getUsername();
         String userMail = user.getEmail();
@@ -357,16 +354,14 @@ public class MainActivity1 extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
 
 
-            SharedPreferences pref = MainActivity1.this.getSharedPreferences("AllCards",0);
-            if(pref.contains("CardNo"))
-            {
-                totalCardNum = pref.getInt("CardNo",0);
+            SharedPreferences pref = MainActivity1.this.getSharedPreferences("AllCards", 0);
+            if (pref.contains("CardNo")) {
+                totalCardNum = pref.getInt("CardNo", 0);
                 String cardPhoto[] = new String[totalCardNum];
 
 
-                for(int i=1;i<=totalCardNum;i++)
-                {
-                    cardPhoto[i] = pref.getString("Card"+i+"Photo",null);
+                for (int i = 1; i <= totalCardNum; i++) {
+                    cardPhoto[i] = pref.getString("Card" + i + "Photo", null);
                     byte[] uploadThis = Base64.decode(cardPhoto[i], Base64.DEFAULT);
                 }
             }

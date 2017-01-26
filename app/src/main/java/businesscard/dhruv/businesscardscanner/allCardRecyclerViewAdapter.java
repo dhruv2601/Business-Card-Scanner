@@ -3,6 +3,7 @@ package businesscard.dhruv.businesscardscanner;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,6 +53,9 @@ public class allCardRecyclerViewAdapter
         @Override
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), ShowCardDetails.class);
+            int pos = getAdapterPosition();
+            i.putExtra("CardPosition",pos);
+
 //            i.putExtra("")                                    // yahan pe sending timke par snd the phone no.s and ither details
             v.getContext().startActivity(i);
 

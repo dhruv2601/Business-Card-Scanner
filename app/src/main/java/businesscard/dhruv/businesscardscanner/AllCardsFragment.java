@@ -55,6 +55,7 @@ public class AllCardsFragment extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 // handle on item click on each card item i.e. open each card to show details
+
             }
         });
     }

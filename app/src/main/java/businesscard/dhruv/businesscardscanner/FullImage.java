@@ -14,6 +14,6 @@ public class FullImage extends AppCompatActivity {
         setContentView(R.layout.activity_full_image);
 
         fullImage  = (ImageView) findViewById(R.id.full_img);
-        fullImage.setImageResource(ShowCardDetails.imageResource);
+        fullImage.setImageBitmap(ShowCardDetails.bitmap);
     }
 }

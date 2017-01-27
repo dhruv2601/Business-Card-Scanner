@@ -80,8 +80,9 @@
         <activity android:name=".FullImage" />
         <activity
             android:name=".SaveCardActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+        <activity android:name=".EditCardActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
     </application>
 
 </manifest>

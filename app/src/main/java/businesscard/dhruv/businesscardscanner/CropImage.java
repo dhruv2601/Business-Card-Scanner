@@ -133,6 +133,7 @@ public class CropImage extends Activity {
 
             Intent i = new Intent(CropImage.this, SaveCardActivity.class);
             startActivity(i);
+            CropImage.this.finish();
 
 //            BitmapFactory.Options options = new BitmapFactory.Options();
 //            options.inSampleSize = 2;

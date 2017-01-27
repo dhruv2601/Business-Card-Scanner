@@ -50,8 +50,10 @@ public class ShowCardDetails extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ShowCardDetails.this,SaveCardActivity.class);
+                Intent i = new Intent(ShowCardDetails.this, EditCardActivity.class);
+                i.putExtra("CardNo",pos);
                 startActivity(i);
+                ShowCardDetails.this.finish();
             }
         });
 
@@ -77,6 +79,14 @@ public class ShowCardDetails extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ShowCardDetails.this,MainActivity1.class);
+        startActivity(i);
+        ShowCardDetails.this.finish();
+        super.onBackPressed();
     }
 
     @Override

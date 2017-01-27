@@ -89,8 +89,10 @@ public class allCardRecyclerViewAdapter
         if (mCardSet.get(position).getmDrawableImage() != 0) {
             holder.imageDrawable.setImageResource(mCardSet.get(position).getmDrawableImage());
         } else {
-            char ch = mCardSet.get(position).getTxtName().charAt(0);
-
+            char ch='A';
+            if(mCardSet.get(position).getTxtName().length()>0) {
+                 ch = mCardSet.get(position).getTxtName().charAt(0);
+            }
             TextDrawable drawable = TextDrawable.builder().beginConfig().fontSize(100).bold().endConfig()
                     .buildRect(String.valueOf(ch).toUpperCase(), Color.rgb(0, 105, 0));
             holder.imageDrawable.setImageDrawable(drawable);

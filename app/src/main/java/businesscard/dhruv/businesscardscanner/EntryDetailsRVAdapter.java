@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class EntryDetailsRVAdapter
                     mCardSet.get(getAdapterPosition()).setEntryDetails(txtEntryDetails.getText().toString());
                     Log.d(TAG, "entryDetails: " + txtEntryDetails.getText().toString());
 
+                    Toast.makeText(view.getContext(), "Entry Added Successfully", Toast.LENGTH_SHORT).show();
                     mCardSet.get(getAdapterPosition()).setEntryType(txtEntryType.getText().toString());
                     Log.d(TAG, "entryDetails: " + txtEntryType.getText().toString());
                 }

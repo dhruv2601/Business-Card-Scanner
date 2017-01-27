@@ -152,6 +152,7 @@ public class MainActivity1 extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity1.this, MainActivity.class);
                 startActivity(i);
+                MainActivity1.this.finish();
             }
         });
 
@@ -208,6 +209,7 @@ public class MainActivity1 extends AppCompatActivity {
 
 //        new getContacts().execute();
     }
+
 
     public class tikaOpenIntro {
 
@@ -336,12 +338,6 @@ public class MainActivity1 extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (back == 0) {
-            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
-            back++;
-        } else {
-            onDestroy();
-        }
         super.onBackPressed();
     }
 
@@ -352,7 +348,6 @@ public class MainActivity1 extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
 
             SharedPreferences pref = MainActivity1.this.getSharedPreferences("AllCards", 0);
             if (pref.contains("CardNo")) {

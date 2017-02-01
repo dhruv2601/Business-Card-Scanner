@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/lighting" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -84,6 +92,7 @@
             android:textColor="@android:color/white"
             android:textSize="14dp"
             android:visibility="invisible" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -132,6 +141,13 @@
             android:layout_marginTop="409dp"
             android:layout_toLeftOf="@id/rl2"
             android:background="@color/orange" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/upandup" />
 
     </RelativeLayout>
 </merge>

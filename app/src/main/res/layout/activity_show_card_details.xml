@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
@@ -30,9 +29,10 @@
 
             <ImageView
                 android:id="@+id/view_full"
-                android:src="@drawable/eye"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@color/tealShade"
+                android:src="@drawable/viewimg" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

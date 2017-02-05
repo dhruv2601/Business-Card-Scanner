@@ -2,6 +2,7 @@ package businesscard.dhruv.businesscardscanner;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,8 +15,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +57,7 @@ import opennlp.tools.util.Span;
 public class SaveCardActivity extends AppCompatActivity {
 
     public static final String TAG = "SaveCardActivity";
+    private CoordinatorLayout cord;
     private RecyclerView rvEntryDetails;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -73,11 +78,20 @@ public class SaveCardActivity extends AppCompatActivity {
     public static String type[] = new String[30];
     public static String desc[] = new String[30];
     private String imageUri;
+    public String dataSetUrl = "";
+    private String name = "";
+    private String email = "";
+    private String website = "";
+    private String no[] = new String[10];
+    private int phNo;
+    private String company = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_card);
+
+        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
 
         mHandler = new Handler();
         entities = new HashMap<>();
@@ -86,6 +100,7 @@ public class SaveCardActivity extends AppCompatActivity {
         imgPersonImg = (CircleImageView) findViewById(R.id.img_profile);
         imgScanned = (ImageView) findViewById(R.id.img_scanned_card);
         rvEntryDetails = (RecyclerView) findViewById(R.id.rv_entry_details);
+        cord = (CoordinatorLayout) findViewById(R.id.cord1);
         rvEntryDetails.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         rvEntryDetails.setLayoutManager(layoutManager);
@@ -110,6 +125,24 @@ public class SaveCardActivity extends AppCompatActivity {
                 int totalCards = pref.getInt("CardNo", 0);
                 int numEntities = entities.size();
                 for (i = 0; i < result.size(); i++) {
+                    String ty = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
+                    switch (ty) {
+                        case "Name":
+                            name = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                            break;
+                        case "Company":
+                            company = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                            break;
+                        case "Phone":
+                            no[phNo++] = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                            break;
+                        case "Email":
+                            email = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                            break;
+                        case "Website":
+                            website = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                    }
+
                     editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
                     editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
                 }
@@ -118,14 +151,92 @@ public class SaveCardActivity extends AppCompatActivity {
                 editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
 
                 ++totalCards;
-                editor.putInt("CardEnt"+totalCards,result.size()-1);
+                editor.putInt("CardEnt" + totalCards, result.size() - 1);
                 editor.putInt("CardNo", totalCards);
-                editor.putString("CardBitmap"+totalCards,convertByte);
+                editor.putString("CardBitmap" + totalCards, convertByte);
                 editor.commit();
-                Log.d(TAG,"pref:: "+pref.getString("Card"+String.valueOf(totalCards)+"EntryType"+1,"null hai bc"));
+                Log.d(TAG, "pref:: " + pref.getString("Card" + String.valueOf(totalCards) + "EntryType" + 1, "null hai bc"));
 
-                Intent intent = new Intent(view.getContext(),ShowCardDetails.class);
-                intent.putExtra("CardPosition",totalCards-1);
+                ArrayList<ContentProviderOperation> ops =
+                        new ArrayList<ContentProviderOperation>();
+
+                ops.add(ContentProviderOperation.newInsert(
+                        ContactsContract.RawContacts.CONTENT_URI)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                        .build()
+                );
+
+                if (name != null) {
+                    ops.add(ContentProviderOperation.newInsert(
+                            ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(
+                                    ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                    name).build()
+                    );
+                }
+
+                for (int j = 0; j < phNo; j++) {
+                    if (no[j] != null && j == 0) {
+                        ops.add(ContentProviderOperation.
+                                newInsert(ContactsContract.Data.CONTENT_URI)
+                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                .withValue(ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[0])
+                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                .build()
+                        );
+                    } else if (no[j] != null && j == 1) {
+                        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                .withValue(ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[1])
+                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                        ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                                .build());
+                    } else if (no[j] != null && j == 2) {
+                        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                .withValue(ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[2])
+                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                        ContactsContract.CommonDataKinds.Phone.TYPE_WORK)
+                                .build());
+                    }
+                }
+                if (email != null) {
+                    ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                            .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
+                            .build());
+                }
+
+                try {
+                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                    Snackbar snackbar = Snackbar
+                            .make(cord, "Contact saved in PhoneBook", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar snackbar = Snackbar
+                            .make(cord, "Please enable permission to save contacts", Snackbar.LENGTH_LONG);
+                    snackbar.setActionTextColor(Color.RED);
+                    snackbar.show();
+//                    Toast.makeText(SaveCardActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
+                intent.putExtra("CardPosition", totalCards - 1);
                 startActivity(intent);
                 SaveCardActivity.this.finish();
             }
@@ -174,6 +285,14 @@ public class SaveCardActivity extends AppCompatActivity {
         cardBitmap = BitmapFactory.decodeFile(String.valueOf(imageUri), options);
 
         imgScanned.setImageBitmap(cardBitmap);
+
+        SharedPreferences pref = this.getSharedPreferences("engDataSet", 0);
+        dataSetUrl = pref.getString("dataSetUrl", "");
+        if (dataSetUrl.equals("")) {
+            Snackbar snackbar = Snackbar
+                    .make(cord, "Please go to settings and download for English Language.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
         new extractOCR().execute();
     }
 
@@ -224,9 +343,9 @@ public class SaveCardActivity extends AppCompatActivity {
         Log.d(TAG, "entitiesSize: " + size);
         int x = 0;
         int i = 0;
-        DataObjectCardEntry dataName = new DataObjectCardEntry("Name","");
+        DataObjectCardEntry dataName = new DataObjectCardEntry("Name", "");
         result.add(dataName);
-        DataObjectCardEntry dataComp = new DataObjectCardEntry("Company","");
+        DataObjectCardEntry dataComp = new DataObjectCardEntry("Company", "");
         result.add(dataComp);
 
         if (entities.containsKey("Phone")) {
@@ -515,7 +634,8 @@ public class SaveCardActivity extends AppCompatActivity {
             Bitmap binarizedBitmap = GetBinaryBitmap(cardBitmap);
             TessBaseAPI baseAPI = new TessBaseAPI();
             baseAPI.setDebug(true);
-            baseAPI.init(DATA_PATH, "eng");
+            Log.d(TAG, "uri: " + dataSetUrl);
+            baseAPI.init(DATA_PATH, "eng");            //content://downloads/my_downloads/1620
             baseAPI.setImage(binarizedBitmap);
             String binaryText = baseAPI.getUTF8Text();
             baseAPI.end();

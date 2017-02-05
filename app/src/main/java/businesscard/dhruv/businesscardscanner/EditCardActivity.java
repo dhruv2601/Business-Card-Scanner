@@ -70,6 +70,8 @@ public class EditCardActivity extends AppCompatActivity {
         rvEntryDetails.setAdapter(adapter);
 
         fabSaveContact = (FloatingActionButton) findViewById(R.id.fab_save_contact);
+        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
+
         fabSaveContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,8 +84,8 @@ public class EditCardActivity extends AppCompatActivity {
                 totalCards = cardNo;
 
                 for (i = 0; i < result.size(); i++) {
-                    editor.putString("Card" + String.valueOf(totalCards ) + "EntryType" + i, result.get(i).getEntryType());
-                    editor.putString("Card" + String.valueOf(totalCards ) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                    editor.putString("Card" + String.valueOf(totalCards) + "EntryType" + i, result.get(i).getEntryType());
+                    editor.putString("Card" + String.valueOf(totalCards) + "EntryDetail" + i, result.get(i).getEntryDetails());
                 }
 
 //                ++totalCards;
@@ -132,8 +134,8 @@ public class EditCardActivity extends AppCompatActivity {
         SharedPreferences pref = EditCardActivity.this.getSharedPreferences("AllCards", 0);
         int size = pref.getInt("CardEnt" + cardNo, 0);
         for (int i = 0; i <= size; i++) {
-            String type = pref.getString("Card" + String.valueOf(cardNo ) + "EntryType" + i, "");
-            String det = pref.getString("Card" + String.valueOf(cardNo ) + "EntryDetail" + i, "");
+            String type = pref.getString("Card" + String.valueOf(cardNo) + "EntryType" + i, "");
+            String det = pref.getString("Card" + String.valueOf(cardNo) + "EntryDetail" + i, "");
 
             DataObjectCardEntry data = new DataObjectCardEntry(type, det);
             result.add(data);

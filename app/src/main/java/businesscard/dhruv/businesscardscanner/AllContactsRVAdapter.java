@@ -185,10 +185,10 @@ public class AllContactsRVAdapter extends RecyclerView
                 i = Color.DKGRAY;
                 break;
             case 1:
-                i = Color.RED;
+                i = Color.DKGRAY;
                 break;
             case 2:
-                i = Color.CYAN;
+                i = Color.BLACK;
                 break;
             case 3:
                 i = Color.GRAY;

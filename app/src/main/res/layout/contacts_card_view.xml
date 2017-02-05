@@ -60,6 +60,7 @@
             <ImageView
                 android:id="@+id/call"
                 android:layout_width="30dp"
+                android:visibility="gone"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="15dp"

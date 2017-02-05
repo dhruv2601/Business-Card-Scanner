@@ -2,6 +2,7 @@ package businesscard.dhruv.businesscardscanner;
 
 import android.*;
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
@@ -57,6 +59,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -83,6 +87,12 @@ public class MainActivity1 extends AppCompatActivity {
     public InputStream isPerson;
     private boolean b;
     public int totalCardNum;
+    private DownloadManager dm;
+    private long enqueue;
+    public static String urlTrainedDataSet;
+    public ViewPager viewPager;
+    public int contactPerm = 0;
+    public int cameraPerm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +110,15 @@ public class MainActivity1 extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(getResources().getColor(R.color.black));
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                        5);
+                Log.d(TAG, "contactsPerm");
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -134,43 +153,93 @@ public class MainActivity1 extends AppCompatActivity {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
-                        5);
-            }
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CALL_PHONE},
-                        5);
+                        6);
             }
         }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_CONTACTS},
+                        7);
+            }
+        }
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         b = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
         if (!b) {
+            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+
+            //this is a pointer to the user
+
+            ParseUser user = ParseUser.getCurrentUser();
+            installation.put("user", user);
+            installation.saveInBackground();
+
+            LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
+
             // doing the cloud backup every time app connected to net
-
-
         }
 
         sref = MainActivity1.this.getSharedPreferences("entered", 0);
         SharedPreferences.Editor editor = sref.edit();
 
         if (sref.getBoolean("entered", false) == false) {
+            Log.d(TAG, "first Time installation");
+            Uri uri;
+            uri = Uri.parse("https://www.dropbox.com/s/sdwvyelq68q012y/eng.traineddata?dl=1");
+            // download vala code here
+//            dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//            DownloadManager.Request request = new DownloadManager.Request(uri);
+//            enqueue = dm.enqueue(request);
+
             hasEntered = false;
             editor.putBoolean("entered", true);
             editor.apply();
         } else {
             hasEntered = true;
         }
+
+        BroadcastReceiver receiver1 = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d(TAG, "onRecieve for downloading");
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    long download = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(enqueue);
+                    Cursor c = dm.query(query);
+                    if (c.moveToFirst()) {
+                        int coloumnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(coloumnIndex)) {
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            urlTrainedDataSet = uriString;
+
+                            File from = new File(uriString);
+                            File to = new File(Environment.getExternalStorageDirectory().toString() + "/BusinessCardScanner/tessdata/eng.traineddata");
+//                            File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/kaic2/imagem.jpg");
+                            from.renameTo(to);
+
+                            SharedPreferences pref = context.getSharedPreferences("engDataSet", 0);
+                            SharedPreferences.Editor edit = pref.edit();
+                            edit.putString("dataSetUrl", Environment.getExternalStorageDirectory().toString() + "/BusinessCardScanner/");
+                            edit.commit();
+                            Log.d(TAG, "uriString: " + from.getAbsolutePath());
+                            //  --------------->>>>>>>>>>>>>>>>       THIS IS THE DOWNLOADED AUDIO URI       <<<<<<<------
+                        }
+                    }
+                }
+            }
+        };
+
+        registerReceiver(receiver1, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -185,15 +254,6 @@ public class MainActivity1 extends AppCompatActivity {
             }
         };
 
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-
-        //this is a pointer to the user
-
-        ParseUser user = ParseUser.getCurrentUser();
-        installation.put("user", user);
-        installation.saveInBackground();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
 
         contactsName = new ArrayList<>();
         contactsNum = new ArrayList<>();
@@ -204,16 +264,31 @@ public class MainActivity1 extends AppCompatActivity {
         openCam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity1.this, MainActivity.class);
-                startActivity(i);
-                MainActivity1.this.finish();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                3);
+                    }
+                }
+
+                SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
+                int totalCards = pref.getInt("CardNo", 0);
+                if (totalCards >= 10) {
+                    // do not allow access SHOW PAYMENT DETAILS
+                } else {
+                    Intent i = new Intent(MainActivity1.this, MainActivity.class);
+                    startActivity(i);
+                    MainActivity1.this.finish();
+                }
             }
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setTitle("");
+        toolbar.setTitle("Business Card Scanner");
         toolbar.setSubtitle("");
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -226,33 +301,26 @@ public class MainActivity1 extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Contacts"));      //2
 
         Log.d(TAG, "initAdapter");
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         Log.d(TAG, "initAdapter1");
 
         Log.d(TAG, "getSupport: " + this.getSupportFragmentManager() + "\n" + tabLayout.getTabCount());
         final PageAdapter adapter = new PageAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
 
-//        search.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-////               adapter.getFilter().filter(s);
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-
+        SharedPreferences pref = this.getSharedPreferences("perms", 0);
+        int aContact = pref.getInt("contact", 0);
+        int aCamera = pref.getInt("camera", 0);
+        if (aCamera == 0 || aContact == 0) {
+            PageAdapterTillPerm adapterTillPerm = new PageAdapterTillPerm(getSupportFragmentManager(), tabLayout.getTabCount());
+            viewPager.setAdapter(adapterTillPerm);
+            tabLayout.setupWithViewPager(viewPager);
+        } else {
+            viewPager.setAdapter(adapter);
+            tabLayout.setupWithViewPager(viewPager);
+        }
         Log.d(TAG, "setAdapter");
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+
         viewPager.setCurrentItem(1);
         tabLayout.getTabAt(0).setText("CHATS");
         tabLayout.getTabAt(1).setText("CARDS");
@@ -260,8 +328,132 @@ public class MainActivity1 extends AppCompatActivity {
 
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
-
 //        new getContacts().execute();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        SharedPreferences pref = this.getSharedPreferences("perms", 0);
+        SharedPreferences.Editor editor = pref.edit();
+
+        switch (requestCode) {
+            case 5: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "ContactsPermRec");
+                    final PageAdapter adapter = new PageAdapter
+                            (getSupportFragmentManager(), tabLayout.getTabCount());
+                    viewPager.setAdapter(adapter);
+                    tabLayout.setupWithViewPager(viewPager);
+                    viewPager.setCurrentItem(1);
+                    editor.putInt("contact", 1);
+                    contactPerm = 1;
+                    tabLayout.getTabAt(0).setText("CHATS");
+                    tabLayout.getTabAt(1).setText("CARDS");
+                    tabLayout.getTabAt(2).setText("CONTACTS");
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    editor.putInt("contact", 0);
+                    contactPerm = 0;
+
+                    new AlertDialog.Builder(this).setTitle("").setMessage(("Please enable Contacts permissions in the phone settings to access the Instant messaging services"))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            }).show();
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+
+                return;
+            }
+
+            case 3: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+//                    final PageAdapter adapter = new PageAdapter
+//                            (getSupportFragmentManager(), tabLayout.getTabCount());
+//                    viewPager.setAdapter(adapter);
+//                    tabLayout.setupWithViewPager(viewPager);
+//                    viewPager.setCurrentItem(1);
+                    editor.putInt("camera", 1);
+                    cameraPerm = 1;
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    editor.putInt("camera", 0);
+                    cameraPerm = 0;
+                    new AlertDialog.Builder(this).setTitle("").setMessage(("Please enable Camera permissions in the phone settings to enable the card scanning feature"))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            }).show();
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                editor.commit();
+                return;
+            }
+
+            case 4: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+//                    final PageAdapter adapter = new PageAdapter
+//                            (getSupportFragmentManager(), tabLayout.getTabCount());
+//                    viewPager.setAdapter(adapter);
+//                    tabLayout.setupWithViewPager(viewPager);
+//                    viewPager.setCurrentItem(1);
+                    editor.putInt("writeData", 1);
+                    cameraPerm = 1;
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    editor.putInt("writeData", 0);
+                    cameraPerm = 0;
+                    new AlertDialog.Builder(this).setTitle("").setMessage(("Please enable access to access to Sd Card permissions to enable the card scanning feature"))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            }).show();
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+
+                if (contactPerm == 1) {
+                    final PageAdapter adapter = new PageAdapter
+                            (getSupportFragmentManager(), tabLayout.getTabCount());
+                    viewPager.setAdapter(adapter);
+                    tabLayout.setupWithViewPager(viewPager);
+                    viewPager.setCurrentItem(1);
+                    tabLayout.getTabAt(0).setText("CHATS");
+                    tabLayout.getTabAt(1).setText("CARDS");
+                    tabLayout.getTabAt(2).setText("CONTACTS");
+                }
+                return;
+            }
+
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
 
@@ -408,17 +600,12 @@ public class MainActivity1 extends AppCompatActivity {
                 totalCardNum = pref.getInt("CardNo", 0);
                 String cardPhoto[] = new String[totalCardNum];
 
-
                 for (int i = 1; i <= totalCardNum; i++) {
                     cardPhoto[i] = pref.getString("Card" + i + "Photo", null);
                     byte[] uploadThis = Base64.decode(cardPhoto[i], Base64.DEFAULT);
                 }
             }
-
-
             return null;
         }
     }
-
-
 }

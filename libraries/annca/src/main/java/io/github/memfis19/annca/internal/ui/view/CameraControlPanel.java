@@ -2,6 +2,8 @@ package io.github.memfis19.annca.internal.ui.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.FileObserver;
 import android.os.Handler;
@@ -9,6 +11,8 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -16,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.github.memfis19.annca.R;
@@ -71,6 +76,7 @@ public class CameraControlPanel extends RelativeLayout
     private FileObserver fileObserver;
     private Box box;
 
+
     public CameraControlPanel(Context context) {
         this(context, null);
     }
@@ -80,6 +86,7 @@ public class CameraControlPanel extends RelativeLayout
         this.context = context;
         init();
     }
+
 
     private void init() {
 //        hasFlash = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
@@ -241,7 +248,6 @@ public class CameraControlPanel extends RelativeLayout
         if (recordButtonListener != null)
             recordButtonListener.onTakePhotoButtonPressed();
     }
-
 
     public void onStartVideoRecord(final File mediaFile) {
         setMediaFilePath(mediaFile);
@@ -425,5 +431,4 @@ public class CameraControlPanel extends RelativeLayout
             alive = false;
         }
     }
-
 }

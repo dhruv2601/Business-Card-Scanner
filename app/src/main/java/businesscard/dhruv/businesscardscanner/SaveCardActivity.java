@@ -223,9 +223,6 @@ public class SaveCardActivity extends AppCompatActivity {
 
                 try {
                     getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                    Snackbar snackbar = Snackbar
-                            .make(cord, "Contact saved in PhoneBook", Snackbar.LENGTH_LONG);
-                    snackbar.show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar snackbar = Snackbar
@@ -237,6 +234,7 @@ public class SaveCardActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
                 intent.putExtra("CardPosition", totalCards - 1);
+                intent.putExtra("nobodyDIB", 1);
                 startActivity(intent);
                 SaveCardActivity.this.finish();
             }
@@ -634,8 +632,20 @@ public class SaveCardActivity extends AppCompatActivity {
             Bitmap binarizedBitmap = GetBinaryBitmap(cardBitmap);
             TessBaseAPI baseAPI = new TessBaseAPI();
             baseAPI.setDebug(true);
-            Log.d(TAG, "uri: " + dataSetUrl);
-            baseAPI.init(DATA_PATH, "eng");            //content://downloads/my_downloads/1620
+            String tempUri = "";
+            Log.d(TAG, "dataSetUrl: " + dataSetUrl);
+            for (int i = 0; i < dataSetUrl.length(); i++) {
+                if (i >= 7) {
+                    if (dataSetUrl.charAt(i) == 't' && dataSetUrl.charAt(i + 1) == 'e' && dataSetUrl.charAt(i+2) == 's' && dataSetUrl.charAt(i+3) == 's') {
+                        break;
+                    } else {
+                        tempUri += dataSetUrl.charAt(i);
+                    }
+                }
+            }
+
+            Log.d(TAG, "uri: " + tempUri);
+            baseAPI.init(tempUri, "eng");            //content://downloads/my_downloads/1620
             baseAPI.setImage(binarizedBitmap);
             String binaryText = baseAPI.getUTF8Text();
             baseAPI.end();

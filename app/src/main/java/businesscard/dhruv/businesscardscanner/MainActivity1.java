@@ -183,7 +183,6 @@ public class MainActivity1 extends AppCompatActivity {
             installation.saveInBackground();
 
             LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
-
             // doing the cloud backup every time app connected to net
         }
 
@@ -195,9 +194,13 @@ public class MainActivity1 extends AppCompatActivity {
             Uri uri;
             uri = Uri.parse("https://www.dropbox.com/s/sdwvyelq68q012y/eng.traineddata?dl=1");
             // download vala code here
-//            dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//            DownloadManager.Request request = new DownloadManager.Request(uri);
-//            enqueue = dm.enqueue(request);
+            dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setTitle("Language = English")
+                    .setDescription("To operate OCR on wnglish language.")
+                    .setDestinationInExternalPublicDir(Environment.getExternalStorageState(),
+                            "tessdata/eng.traineddata");
+            enqueue = dm.enqueue(request);
 
             hasEntered = false;
             editor.putBoolean("entered", true);
@@ -222,16 +225,16 @@ public class MainActivity1 extends AppCompatActivity {
                             String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                             urlTrainedDataSet = uriString;
 
-                            File from = new File(uriString);
-                            File to = new File(Environment.getExternalStorageDirectory().toString() + "/BusinessCardScanner/tessdata/eng.traineddata");
-//                            File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/kaic2/imagem.jpg");
-                            from.renameTo(to);
+//                            File from = new File(uriString);
+//                            File to = new File(Environment.getExternalStorageDirectory().toString() + "/BusinessCardScanner/tessdata/eng.traineddata");
+////                            File to = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/kaic2/imagem.jpg");
+//                            from.renameTo(to);
 
                             SharedPreferences pref = context.getSharedPreferences("engDataSet", 0);
                             SharedPreferences.Editor edit = pref.edit();
-                            edit.putString("dataSetUrl", Environment.getExternalStorageDirectory().toString() + "/BusinessCardScanner/");
+                            edit.putString("dataSetUrl", uriString);
                             edit.commit();
-                            Log.d(TAG, "uriString: " + from.getAbsolutePath());
+                            Log.d(TAG, "uriString: " + uriString);
                             //  --------------->>>>>>>>>>>>>>>>       THIS IS THE DOWNLOADED AUDIO URI       <<<<<<<------
                         }
                     }

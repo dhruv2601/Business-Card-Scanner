@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 public class ShowCardDetails extends AppCompatActivity {
 
     public static final String TAG = "ShowCardFragment";
+    private CoordinatorLayout cord;
     private RecyclerView rvEntryDetails;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -34,8 +37,16 @@ public class ShowCardDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_card_details);
 
+        cord = (CoordinatorLayout) findViewById(R.id.cord2);
         Intent i = getIntent();
         pos = i.getIntExtra("CardPosition", 0);
+        int NDIB = i.getIntExtra("nobodyDIB", 0);
+        if (NDIB == 1) {
+            Snackbar snackbar = Snackbar
+                    .make(cord, "Contact saved in PhoneBook", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+
         Log.d(TAG, "pos:: " + pos);
         edit = (FloatingActionButton) findViewById(R.id.fab_edit_contact);
         fullImg = (ImageView) findViewById(R.id.view_full);
@@ -51,7 +62,7 @@ public class ShowCardDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ShowCardDetails.this, EditCardActivity.class);
-                i.putExtra("CardNo",pos);
+                i.putExtra("CardNo", pos);
                 startActivity(i);
                 ShowCardDetails.this.finish();
             }
@@ -83,7 +94,7 @@ public class ShowCardDetails extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(ShowCardDetails.this,MainActivity1.class);
+        Intent i = new Intent(ShowCardDetails.this, MainActivity1.class);
         startActivity(i);
         ShowCardDetails.this.finish();
         super.onBackPressed();

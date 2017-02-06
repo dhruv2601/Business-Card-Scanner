@@ -87,7 +87,8 @@
         <activity
             android:name=".EditCardActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".BillingActivity"></activity>
+        <activity android:name=".BillingActivity" />
+        <activity android:name=".BillingActLib"></activity>
     </application>
 
 </manifest>

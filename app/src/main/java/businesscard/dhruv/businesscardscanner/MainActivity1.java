@@ -197,7 +197,7 @@ public class MainActivity1 extends AppCompatActivity {
             dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             DownloadManager.Request request = new DownloadManager.Request(uri);
             request.setTitle("Language = English")
-                    .setDescription("To operate OCR on wnglish language.")
+                    .setDescription("To operate OCR on english language.")
                     .setDestinationInExternalPublicDir(Environment.getExternalStorageState(),
                             "tessdata/eng.traineddata");
             enqueue = dm.enqueue(request);
@@ -285,7 +285,7 @@ public class MainActivity1 extends AppCompatActivity {
 //                    startActivity(i);
 //                    MainActivity1.this.finish();
 
-                    Intent i = new Intent(MainActivity1.this,BillingActivity.class);
+                    Intent i = new Intent(MainActivity1.this,BillingActLib.class);
                     startActivity(i);
                 }
             }

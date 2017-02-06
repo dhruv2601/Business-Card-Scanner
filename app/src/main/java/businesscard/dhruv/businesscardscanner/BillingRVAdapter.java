@@ -93,16 +93,16 @@ public class BillingRVAdapter extends RecyclerView
     public void onBindViewHolder(BillingRVAdapter.DataObjectHolder holder, int position) {
         if (position == 0) {
             holder.txtNumCards.setText("10 Cards");
-            holder.btnCost.setText("HULALA");
+            holder.btnCost.setText(mCardSet.get(0));
         } else if (position == 1) {
             holder.txtNumCards.setText("25 Cards");
-            holder.btnCost.setText("HULALA");
+            holder.btnCost.setText(mCardSet.get(1));
         } else if (position == 2) {
             holder.txtNumCards.setText("50 Cards");
-            holder.btnCost.setText("HULALA");
+            holder.btnCost.setText(mCardSet.get(2));
         } else if (position == 3) {
             holder.txtNumCards.setText("100 Cards");
-            holder.btnCost.setText("HULALA");
+            holder.btnCost.setText(mCardSet.get(3));
         }
     }
     @Override

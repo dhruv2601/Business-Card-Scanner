@@ -13,4 +13,11 @@
         android:layout_marginBottom="10dp"
         android:scrollbars="vertical" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
 </RelativeLayout>

@@ -46,13 +46,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
-import opennlp.tools.util.Span;
 
 public class SaveCardActivity extends AppCompatActivity {
 
@@ -487,130 +480,130 @@ public class SaveCardActivity extends AppCompatActivity {
         }
     }
 
-    public class tikaOpenIntro {
-
-        public String Tokens[];
-
-        public String namefind(String cnt[]) {
-            InputStream is;
-            TokenNameFinderModel tnf;
-            NameFinderME nf;
-            String sd = "";
-            try {
-                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
-
-                tnf = new TokenNameFinderModel(is);
-                nf = new NameFinderME(tnf);
-
-                Span sp[] = nf.find(cnt);
-                String a[] = Span.spansToStrings(sp, cnt);
-                StringBuilder fd = new StringBuilder();
-                int l = a.length;
-
-                for (int j = 0; j < l; j++) {
-                    fd = fd.append(a[j] + "\n");
-                }
-                sd = fd.toString();
-
-            } catch (FileNotFoundException e) {
-
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            return sd;
-        }
-
-        public String orgFind(String cnt[]) {
-            InputStream is;
-            TokenNameFinderModel tnf;
-            NameFinderME nf;
-            String sd = "";
-            try {
-                is = new FileInputStream(
-                        "/storage/emulated/0/en-ner-organization.bin");
-
-                tnf = new TokenNameFinderModel(is);
-                nf = new NameFinderME(tnf);
-                Span sp[] = nf.find(cnt);
-                String a[] = Span.spansToStrings(sp, cnt);
-                StringBuilder fd = new StringBuilder();
-                int l = a.length;
-
-                for (int j = 0; j < l; j++) {
-                    fd = fd.append(a[j] + "\n");
-                }
-
-                sd = fd.toString();
-            } catch (FileNotFoundException e) {
-
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            return sd;
-        }
-
-        public String locationFind(String cnt[]) {
-            InputStream is;
-            TokenNameFinderModel tnf;
-            NameFinderME nf;
-            String sd = "";
-            try {
-                is = new FileInputStream(
-                        "/storage/emulated/0/en-ner-location.bin");
-
-                tnf = new TokenNameFinderModel(is);
-                nf = new NameFinderME(tnf);
-                Span sp[] = nf.find(cnt);
-                String a[] = Span.spansToStrings(sp, cnt);
-                StringBuilder fd = new StringBuilder();
-                int l = a.length;
-
-                for (int j = 0; j < l; j++) {
-                    fd = fd.append(a[j] + "\n");
-                }
-
-                sd = fd.toString();
-            } catch (FileNotFoundException e) {
-
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            return sd;
-        }
-
-        public void tokenization(String tokens) {
-
-            InputStream is;
-            TokenizerModel tm;
-            try {
-                is = new FileInputStream("/storage/emulated/0/en-token.bin");
-                tm = new TokenizerModel(is);
-                Tokenizer tz = new TokenizerME(tm);
-                Tokens = tz.tokenize(tokens);
-
-                for (int i = 0; i < Tokens.length; i++) {
-                    Log.d(TAG, "tokens: " + Tokens[i]);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public class tikaOpenIntro {
+//
+//        public String Tokens[];
+//
+//        public String namefind(String cnt[]) {
+//            InputStream is;
+//            TokenNameFinderModel tnf;
+//            NameFinderME nf;
+//            String sd = "";
+//            try {
+//                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
+//
+//                tnf = new TokenNameFinderModel(is);
+//                nf = new NameFinderME(tnf);
+//
+//                Span sp[] = nf.find(cnt);
+//                String a[] = Span.spansToStrings(sp, cnt);
+//                StringBuilder fd = new StringBuilder();
+//                int l = a.length;
+//
+//                for (int j = 0; j < l; j++) {
+//                    fd = fd.append(a[j] + "\n");
+//                }
+//                sd = fd.toString();
+//
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (InvalidFormatException e) {
+//
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//            return sd;
+//        }
+//
+//        public String orgFind(String cnt[]) {
+//            InputStream is;
+//            TokenNameFinderModel tnf;
+//            NameFinderME nf;
+//            String sd = "";
+//            try {
+//                is = new FileInputStream(
+//                        "/storage/emulated/0/en-ner-organization.bin");
+//
+//                tnf = new TokenNameFinderModel(is);
+//                nf = new NameFinderME(tnf);
+//                Span sp[] = nf.find(cnt);
+//                String a[] = Span.spansToStrings(sp, cnt);
+//                StringBuilder fd = new StringBuilder();
+//                int l = a.length;
+//
+//                for (int j = 0; j < l; j++) {
+//                    fd = fd.append(a[j] + "\n");
+//                }
+//
+//                sd = fd.toString();
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (InvalidFormatException e) {
+//
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//            return sd;
+//        }
+//
+//        public String locationFind(String cnt[]) {
+//            InputStream is;
+//            TokenNameFinderModel tnf;
+//            NameFinderME nf;
+//            String sd = "";
+//            try {
+//                is = new FileInputStream(
+//                        "/storage/emulated/0/en-ner-location.bin");
+//
+//                tnf = new TokenNameFinderModel(is);
+//                nf = new NameFinderME(tnf);
+//                Span sp[] = nf.find(cnt);
+//                String a[] = Span.spansToStrings(sp, cnt);
+//                StringBuilder fd = new StringBuilder();
+//                int l = a.length;
+//
+//                for (int j = 0; j < l; j++) {
+//                    fd = fd.append(a[j] + "\n");
+//                }
+//
+//                sd = fd.toString();
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (InvalidFormatException e) {
+//
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//            return sd;
+//        }
+//
+//        public void tokenization(String tokens) {
+//
+//            InputStream is;
+//            TokenizerModel tm;
+//            try {
+//                is = new FileInputStream("/storage/emulated/0/en-token.bin");
+//                tm = new TokenizerModel(is);
+//                Tokenizer tz = new TokenizerME(tm);
+//                Tokens = tz.tokenize(tokens);
+//
+//                for (int i = 0; i < Tokens.length; i++) {
+//                    Log.d(TAG, "tokens: " + Tokens[i]);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 
     public class extractOCR extends AsyncTask<Void, Void, Void> {
@@ -736,9 +729,9 @@ public class SaveCardActivity extends AppCompatActivity {
 
             //WEB PAGE EXTRACTION ENDS
 
-            SaveCardActivity.tikaOpenIntro toi = new SaveCardActivity.tikaOpenIntro();
-
-            toi.tokenization(binaryText);           // try here the converted text also
+//            SaveCardActivity.tikaOpenIntro toi = new SaveCardActivity.tikaOpenIntro();
+//
+//            toi.tokenization(binaryText);           // try here the converted text also
 
 //            String names = toi.namefind(toi.Tokens);
 //            String org = toi.orgFind(toi.Tokens);

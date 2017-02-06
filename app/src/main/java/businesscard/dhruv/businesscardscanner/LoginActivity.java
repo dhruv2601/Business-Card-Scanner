@@ -37,11 +37,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         super.onCreate(savedInstanceState);
 
-        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-                .applicationId("Mh9fvVwsWq5DcPVk3lGo9sKixRUuux0d6hqyDY1Y")
-                .server("https://parseapi.back4app.com/")
-                .clientKey("REWqvRAhPWnuLJajk6XQq58vzQtPBdeESEhWZsO6")
-                .build());
+//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+//                .applicationId("Mh9fvVwsWq5DcPVk3lGo9sKixRUuux0d6hqyDY1Y")
+//                .server("https://parseapi.back4app.com/")
+//                .clientKey("REWqvRAhPWnuLJajk6XQq58vzQtPBdeESEhWZsO6")
+//                .build());
 
         btnLogin = (AppCompatButton) findViewById(R.id.btn_login);
         forgotPassword = (TextView) findViewById(R.id.forgot_password);

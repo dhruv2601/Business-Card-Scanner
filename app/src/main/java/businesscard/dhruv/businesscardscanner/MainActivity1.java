@@ -64,13 +64,13 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
-import opennlp.tools.util.Span;
+//import opennlp.tools.namefind.NameFinderME;
+//import opennlp.tools.namefind.TokenNameFinderModel;
+//import opennlp.tools.tokenize.Tokenizer;
+//import opennlp.tools.tokenize.TokenizerME;
+//import opennlp.tools.tokenize.TokenizerModel;
+//import opennlp.tools.util.InvalidFormatException;
+//import opennlp.tools.util.Span;
 
 public class MainActivity1 extends AppCompatActivity {
     public TabLayout tabLayout;
@@ -281,9 +281,12 @@ public class MainActivity1 extends AppCompatActivity {
                 if (totalCards >= 10) {
                     // do not allow access SHOW PAYMENT DETAILS
                 } else {
-                    Intent i = new Intent(MainActivity1.this, MainActivity.class);
+//                    Intent i = new Intent(MainActivity1.this, MainActivity.class);
+//                    startActivity(i);
+//                    MainActivity1.this.finish();
+
+                    Intent i = new Intent(MainActivity1.this,BillingActivity.class);
                     startActivity(i);
-                    MainActivity1.this.finish();
                 }
             }
         });
@@ -460,122 +463,122 @@ public class MainActivity1 extends AppCompatActivity {
     }
 
 
-    public class tikaOpenIntro {
-
-        public String Tokens[];
-
-        public String namefind(String cnt[]) {
-            InputStream is;
-            TokenNameFinderModel tnf;
-            NameFinderME nf;
-            String sd = "";
-            try {
-                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
-
-                tnf = new TokenNameFinderModel(is);
-                nf = new NameFinderME(tnf);
-
-                Span sp[] = nf.find(cnt);
-                String a[] = Span.spansToStrings(sp, cnt);
-                StringBuilder fd = new StringBuilder();
-                int l = a.length;
-
-                for (int j = 0; j < l; j++) {
-                    fd = fd.append(a[j] + "\n");
-                }
-                sd = fd.toString();
-
-            } catch (FileNotFoundException e) {
-
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            return sd;
-        }
-
-        public String orgfind(String cnt[]) {
-            InputStream is;
-            TokenNameFinderModel tnf;
-            NameFinderME nf;
-            String sd = "";
-            try {
-                is = new FileInputStream(
-                        "/storage/emulated/0/en-ner-organization.bin");
-
-                Log.d(TAG, "inputS: " + is);
-                tnf = new TokenNameFinderModel(is);
-                nf = new NameFinderME(tnf);
-                Span sp[] = nf.find(cnt);
-                String a[] = Span.spansToStrings(sp, cnt);
-                StringBuilder fd = new StringBuilder();
-                int l = a.length;
-
-                for (int j = 0; j < l; j++) {
-                    fd = fd.append(a[j] + "\n");
-                }
-
-                sd = fd.toString();
-            } catch (FileNotFoundException e) {
-
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-
-                e.printStackTrace();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            return sd;
-        }
-
-        public void tokenization(String tokens) {
-
-            InputStream is;
-            TokenizerModel tm;
-
-            try {
-                is = new FileInputStream("/storage/emulated/0/en-token.bin");
-                tm = new TokenizerModel(is);
-                Tokenizer tz = new TokenizerME(tm);
-                Tokens = tz.tokenize(tokens);
-
-                for (int i = 0; i < Tokens.length; i++) {
-                    Log.d(TAG, "tokens: " + Tokens[i]);
-                }
-                // System.out.println(Tokens[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private String convertStreamToString(InputStream is) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            try {
-                Log.d(TAG, "inputStream: ");
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append('\n');
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-//        Log.d(TAG,"inputStream: "+sb.toString());
-            return sb.toString();
-        }
-
-    }
+//    public class tikaOpenIntro {
+//
+//        public String Tokens[];
+//
+//        public String namefind(String cnt[]) {
+//            InputStream is;
+//            TokenNameFinderModel tnf;
+//            NameFinderME nf;
+//            String sd = "";
+//            try {
+//                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
+//
+//                tnf = new TokenNameFinderModel(is);
+//                nf = new NameFinderME(tnf);
+//
+//                Span sp[] = nf.find(cnt);
+//                String a[] = Span.spansToStrings(sp, cnt);
+//                StringBuilder fd = new StringBuilder();
+//                int l = a.length;
+//
+//                for (int j = 0; j < l; j++) {
+//                    fd = fd.append(a[j] + "\n");
+//                }
+//                sd = fd.toString();
+//
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (InvalidFormatException e) {
+//
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//            return sd;
+//        }
+//
+//        public String orgfind(String cnt[]) {
+//            InputStream is;
+//            TokenNameFinderModel tnf;
+//            NameFinderME nf;
+//            String sd = "";
+//            try {
+//                is = new FileInputStream(
+//                        "/storage/emulated/0/en-ner-organization.bin");
+//
+//                Log.d(TAG, "inputS: " + is);
+//                tnf = new TokenNameFinderModel(is);
+//                nf = new NameFinderME(tnf);
+//                Span sp[] = nf.find(cnt);
+//                String a[] = Span.spansToStrings(sp, cnt);
+//                StringBuilder fd = new StringBuilder();
+//                int l = a.length;
+//
+//                for (int j = 0; j < l; j++) {
+//                    fd = fd.append(a[j] + "\n");
+//                }
+//
+//                sd = fd.toString();
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (InvalidFormatException e) {
+//
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
+//            return sd;
+//        }
+//
+//        public void tokenization(String tokens) {
+//
+//            InputStream is;
+//            TokenizerModel tm;
+//
+//            try {
+//                is = new FileInputStream("/storage/emulated/0/en-token.bin");
+//                tm = new TokenizerModel(is);
+//                Tokenizer tz = new TokenizerME(tm);
+//                Tokens = tz.tokenize(tokens);
+//
+//                for (int i = 0; i < Tokens.length; i++) {
+//                    Log.d(TAG, "tokens: " + Tokens[i]);
+//                }
+//                // System.out.println(Tokens[1]);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        private String convertStreamToString(InputStream is) {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+//            StringBuilder sb = new StringBuilder();
+//            String line;
+//            try {
+//                Log.d(TAG, "inputStream: ");
+//                while ((line = reader.readLine()) != null) {
+//                    sb.append(line).append('\n');
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                try {
+//                    is.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+////        Log.d(TAG,"inputStream: "+sb.toString());
+//            return sb.toString();
+//        }
+//
+//    }
 
     @Override
     protected void onDestroy() {

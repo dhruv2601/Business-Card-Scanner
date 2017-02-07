@@ -12,6 +12,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,18 +22,26 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
@@ -72,7 +83,7 @@ import java.util.ArrayList;
 //import opennlp.tools.util.InvalidFormatException;
 //import opennlp.tools.util.Span;
 
-public class MainActivity1 extends AppCompatActivity {
+public class MainActivity1 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public TabLayout tabLayout;
     private static final String TAG = "MainAct1";
     public FloatingActionButton openCam;
@@ -93,6 +104,8 @@ public class MainActivity1 extends AppCompatActivity {
     public ViewPager viewPager;
     public int contactPerm = 0;
     public int cameraPerm = 0;
+
+    public ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,7 +298,7 @@ public class MainActivity1 extends AppCompatActivity {
 //                    startActivity(i);
 //                    MainActivity1.this.finish();
 
-                    Intent i = new Intent(MainActivity1.this,BillingActLib.class);
+                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
                     startActivity(i);
                 }
             }
@@ -331,6 +344,26 @@ public class MainActivity1 extends AppCompatActivity {
         tabLayout.getTabAt(0).setText("CHATS");
         tabLayout.getTabAt(1).setText("CARDS");
         tabLayout.getTabAt(2).setText("CONTACTS");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu, null);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, Color.WHITE);
+        toggle.setHomeAsUpIndicator(drawable);
+
+//        toggle.setDrawerIndicatorEnabled(true);
+        drawer.setDrawerListener(toggle);
 
         final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
@@ -455,130 +488,8 @@ public class MainActivity1 extends AppCompatActivity {
                 }
                 return;
             }
-
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
-
-
-//    public class tikaOpenIntro {
-//
-//        public String Tokens[];
-//
-//        public String namefind(String cnt[]) {
-//            InputStream is;
-//            TokenNameFinderModel tnf;
-//            NameFinderME nf;
-//            String sd = "";
-//            try {
-//                is = new FileInputStream("/storage/emulated/0/en-ner-person.bin");
-//
-//                tnf = new TokenNameFinderModel(is);
-//                nf = new NameFinderME(tnf);
-//
-//                Span sp[] = nf.find(cnt);
-//                String a[] = Span.spansToStrings(sp, cnt);
-//                StringBuilder fd = new StringBuilder();
-//                int l = a.length;
-//
-//                for (int j = 0; j < l; j++) {
-//                    fd = fd.append(a[j] + "\n");
-//                }
-//                sd = fd.toString();
-//
-//            } catch (FileNotFoundException e) {
-//
-//                e.printStackTrace();
-//            } catch (InvalidFormatException e) {
-//
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//
-//                e.printStackTrace();
-//            }
-//            return sd;
-//        }
-//
-//        public String orgfind(String cnt[]) {
-//            InputStream is;
-//            TokenNameFinderModel tnf;
-//            NameFinderME nf;
-//            String sd = "";
-//            try {
-//                is = new FileInputStream(
-//                        "/storage/emulated/0/en-ner-organization.bin");
-//
-//                Log.d(TAG, "inputS: " + is);
-//                tnf = new TokenNameFinderModel(is);
-//                nf = new NameFinderME(tnf);
-//                Span sp[] = nf.find(cnt);
-//                String a[] = Span.spansToStrings(sp, cnt);
-//                StringBuilder fd = new StringBuilder();
-//                int l = a.length;
-//
-//                for (int j = 0; j < l; j++) {
-//                    fd = fd.append(a[j] + "\n");
-//                }
-//
-//                sd = fd.toString();
-//            } catch (FileNotFoundException e) {
-//
-//                e.printStackTrace();
-//            } catch (InvalidFormatException e) {
-//
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//
-//                e.printStackTrace();
-//            }
-//            return sd;
-//        }
-//
-//        public void tokenization(String tokens) {
-//
-//            InputStream is;
-//            TokenizerModel tm;
-//
-//            try {
-//                is = new FileInputStream("/storage/emulated/0/en-token.bin");
-//                tm = new TokenizerModel(is);
-//                Tokenizer tz = new TokenizerME(tm);
-//                Tokens = tz.tokenize(tokens);
-//
-//                for (int i = 0; i < Tokens.length; i++) {
-//                    Log.d(TAG, "tokens: " + Tokens[i]);
-//                }
-//                // System.out.println(Tokens[1]);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        private String convertStreamToString(InputStream is) {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-//            StringBuilder sb = new StringBuilder();
-//            String line;
-//            try {
-//                Log.d(TAG, "inputStream: ");
-//                while ((line = reader.readLine()) != null) {
-//                    sb.append(line).append('\n');
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } finally {
-//                try {
-//                    is.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-////        Log.d(TAG,"inputStream: "+sb.toString());
-//            return sb.toString();
-//        }
-//
-//    }
 
     @Override
     protected void onDestroy() {
@@ -591,6 +502,49 @@ public class MainActivity1 extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.usingTheApp) {
+//            Log.d(TAG, "onOptionsItemSelected: action_settings");
+//            return true;
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.about) {
+            //Add an activity
+        } else if (id == R.id.buy_cards) {
+
+            Intent i = new Intent(MainActivity1.this, BillingActLib.class);
+            startActivity(i);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public class cloudBackup extends AsyncTask<Void, Void, Void> {

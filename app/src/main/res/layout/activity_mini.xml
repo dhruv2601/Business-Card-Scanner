@@ -13,7 +13,7 @@
         android:layout_height="55dp"
         android:background="@color/black"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/AppTheme.Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <android.support.design.widget.TextInputLayout
@@ -23,7 +23,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <!---->
                 <!--<EditText-->
                 <!--android:id="@+id/edt_search"-->

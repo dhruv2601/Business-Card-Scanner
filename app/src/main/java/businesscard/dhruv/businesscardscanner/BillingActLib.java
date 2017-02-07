@@ -1,6 +1,6 @@
 package businesscard.dhruv.businesscardscanner;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -18,8 +19,6 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import businesscard.dhruv.businesscardscanner.util.IabHelper;
 
 public class BillingActLib extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
@@ -44,9 +43,14 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main1);
-
         setContentView(R.layout.activity_billing);
+
+        Dialog settingsDialog = new Dialog(this);
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.your_dialog_layout
+                , null));
+        settingsDialog.show();
+        Toast.makeText(this, "Press back once for choices.", Toast.LENGTH_SHORT).show();
 
         price = new ArrayList<>();
         price.add(0, "0");

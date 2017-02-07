@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/viewimg"
+        android:title="About BC Scanner" />
+    <item
+        android:id="@+id/buy_cards"
+        android:icon="@drawable/buyingcards"
+        android:title="Buy Cards" />
+    <item
+        android:id="@+id/invite"
+        android:icon="@drawable/sharing"
+        android:title="Share and Invite" />
+    <item
+        android:id="@+id/support"
+        android:icon="@drawable/call"
+        android:title="Support" />
+    <item
+        android:id="@+id/aboutMe"
+        android:icon="@drawable/ic_perm_identity_black"
+        android:title="About Developer" />
+</menu>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pv="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="businesscard.dhruv.businesscardscanner.SplashScreen">
+
+    <me.wangyuwei.particleview.ParticleView
+        android:id="@+id/splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        pv:pv_background_color="#2E2E2E"
+        pv:pv_host_text="B C"
+        pv:pv_host_text_anim_time="800"
+        pv:pv_host_text_size="60sp"
+        pv:pv_particle_text="SCANNER"
+        pv:pv_particle_text_size="40sp"
+        pv:pv_spread_anim_time="800"
+        pv:pv_text_anim_time="1000"
+        pv:pv_text_color="@color/colorPrimary" />
+
+</RelativeLayout>

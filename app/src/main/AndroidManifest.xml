@@ -65,13 +65,7 @@
         <activity android:name=".AllContacts" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <activity android:name=".CreateAccount" />
         <activity
             android:name=".MessagingActivity"
@@ -87,8 +81,15 @@
         <activity
             android:name=".EditCardActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".BillingActivity" />
-        <activity android:name=".BillingActLib"></activity>
+        <activity android:name=".BillingActLib" />
+        <activity
+            android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

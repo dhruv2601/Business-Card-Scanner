@@ -8,6 +8,11 @@ buildscript {
             url 'http://dl.bintray.com/amulyakhare/maven'
         }
     }
+    repositories {
+        maven {
+            url 'https://dl.bintray.com/wangyuwei/maven'
+        }
+    }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
 

@@ -1,16 +1,15 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -18,25 +17,23 @@ import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 //import businesscard.dhruv.businesscardscanner.util.IabHelper;
 
 public class BillingActLib extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
+    private static final String TAG = "BillingAct";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ProgressBar progressBar;
     private List<SkuDetails> productLists;
 
-    public static final String cards10 = "data.pole.10";
-    public static final String cards25 = "data.pole.25";
-    public static final String cards50 = "data.pole.50";
-    public static final String cards100 = "data.pole.100";
+    public static final String cards10 = "data.pole.10cards";
+    public static final String cards25 = "data.pole.25cards";
+    public static final String cards50 = "data.pole.50cards";
+    public static final String cards100 = "data.pole.100cards";
 
     private boolean readyToPurchase = false;
     BillingProcessor bp;
@@ -45,6 +42,10 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main1);
+
         setContentView(R.layout.activity_billing);
 
         price = new ArrayList<>();
@@ -59,7 +60,6 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         mAdapter = new BillingRVAdapter(price);
         mRecyclerView.setAdapter(mAdapter);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         bp = new BillingProcessor(this, getString(R.string.play_billing_license_key), this);
     }
 
@@ -67,7 +67,8 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
     public void onBillingInitialized() {
         readyToPurchase = true;
         checkStatus();
-        getProducts();
+        getPrice();
+//        getProducts();
     }
 
     @Override
@@ -91,7 +92,7 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(BillingActLib.this, "Unable to process purchase", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(BillingActLib.this, "Unable to process purchase", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -101,6 +102,11 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
             @Override
             protected Boolean doInBackground(Void... voids) {
                 List<String> owned = bp.listOwnedProducts();
+                Log.d(TAG, "prodOwnedSize: " + owned.size());
+                for (int i = 0; i < owned.size(); i++) {
+                    Log.d(TAG, "prodOwned: " + owned.get(i));
+                }
+
                 return owned != null && owned.size() != 0;
             }
 
@@ -114,65 +120,37 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         }.execute();
     }
 
+    private void getPrice() {
 
-    private void getProducts() {
-
-        new AsyncTask<Void, Void, List<SkuDetails>>() {
+        new AsyncTask<Void, Void, List<String>>() {
             @Override
-            protected List<SkuDetails> doInBackground(Void... voids) {
-
-                ArrayList<String> products = new ArrayList<>();
-
-                products.add(cards10);
-                products.add(cards25);
-                products.add(cards50);
-                products.add(cards100);
-                return bp.getPurchaseListingDetails(products);
+            protected List<String> doInBackground(Void... voids) {
+                Log.d(TAG, "inside::: ");
+                ArrayList<String> list = new ArrayList<String>();
+                SkuDetails skuCards10 = bp.getPurchaseListingDetails(cards10);
+                SkuDetails skuCards25 = bp.getPurchaseListingDetails(cards25);
+                SkuDetails skuCards50 = bp.getPurchaseListingDetails(cards50);
+                SkuDetails skuCards100 = bp.getPurchaseListingDetails(cards100);
+                list.add(0, skuCards10.priceText);
+                list.add(1, skuCards25.priceText);
+                list.add(2, skuCards50.priceText);
+                list.add(3, skuCards100.priceText);
+                Log.d(TAG, "skussffuege 10: " + skuCards10);
+                return list;
             }
 
             @Override
-            protected void onPostExecute(List<SkuDetails> productList) {
+            protected void onPostExecute(List<String> productList) {
                 super.onPostExecute(productList);
 
-                if (productList == null)
-                    return;
+                price.add(0, productList.get(0));
+                price.add(1, productList.get(1));
+                price.add(2, productList.get(2));
+                price.add(3, productList.get(3));
 
-                productLists = productList;
-                Collections.sort(productList, new Comparator<SkuDetails>() {
-                    @Override
-                    public int compare(SkuDetails skuDetails, SkuDetails t1) {
-                        if (skuDetails.priceValue >= t1.priceValue)
-                            return 1;
-                        else if (skuDetails.priceValue <= t1.priceValue)
-                            return -1;
-                        else return 0;
-                    }
-                });
-                for (int i = 0; i < productList.size(); i++) {
-                    final SkuDetails product = productList.get(i);
-//                    View rootView = LayoutInflater.from(BillingActLib.this).inflate(R.layout.activity_billing, mRecyclerView, false);
-
-//                    AppCompatButton detail = (AppCompatButton) rootView.findViewById(R.id.card_rates);
-//                    detail.setText(product.priceText);
-//
-                    price.add(i, product.priceText);
-//                    rootView.findViewById(R.id.btn_donate).setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            if (readyToPurchase)
-//                                bp.purchase(DonateActivity.this, product.productId);
-//                            else
-//                                Toast.makeText(DonateActivity.this, "Unable to initiate purchase", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//
-//                    productListView.addView(rootView);
-
-                }
+                Log.d(TAG, "price: " + price.get(2));
                 mAdapter = new BillingRVAdapter(price);
                 mRecyclerView.setAdapter(mAdapter);
-
-                progressBar.setVisibility(View.GONE);
             }
         }.execute();
     }
@@ -184,13 +162,21 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
             @Override
             public void onItemClick(int position, View v) {
                 if (readyToPurchase) {
-                    final SkuDetails product = productLists.get(position);
-                    bp.purchase(BillingActLib.this, product.productId);
+                    if (position == 0) {
+                        bp.purchase(BillingActLib.this, cards10);
+                    }
+                    if (position == 1) {
+                        bp.purchase(BillingActLib.this, cards25);
+                    }
+                    if (position == 2) {
+                        bp.purchase(BillingActLib.this, cards50);
+                    }
+                    if (position == 3) {
+                        bp.purchase(BillingActLib.this, cards100);
+                    }
                 } else
                     Toast.makeText(BillingActLib.this, "Unable to initiate purchase", Toast.LENGTH_SHORT).show();
             }
-            // handle on item click on each card item
-//            }
         });
     }
 

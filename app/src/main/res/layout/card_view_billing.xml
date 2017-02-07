@@ -13,6 +13,7 @@
         android:layout_height="130dp"
         android:layout_gravity="center"
         app:cardCornerRadius="4dp"
+        android:layout_marginTop="30dp"
         app:contentPadding="1dp"
         card_view:cardElevation="6dp"
         card_view:cardUseCompatPadding="true">
@@ -39,14 +40,14 @@
                 android:textSize="30dp"
                 android:textStyle="italic" />
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/card_rates"
                 android:layout_width="130dp"
                 android:layout_height="70dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/txt_num_cards"
-                android:background="@color/orangelight"
+                android:background="@color/red"
                 android:padding="12dp"
                 android:textColor="@color/off_white"
                 android:textSize="20dp"

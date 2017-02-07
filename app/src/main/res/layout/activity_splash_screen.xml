@@ -14,7 +14,7 @@
         pv:pv_background_color="#2E2E2E"
         pv:pv_host_text="B C"
         pv:pv_host_text_anim_time="800"
-        pv:pv_host_text_size="60sp"
+        pv:pv_host_text_size="40sp"
         pv:pv_particle_text="SCANNER"
         pv:pv_particle_text_size="40sp"
         pv:pv_spread_anim_time="800"

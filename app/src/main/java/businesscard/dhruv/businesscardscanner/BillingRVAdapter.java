@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
@@ -53,13 +54,13 @@ public class BillingRVAdapter extends RecyclerView
             implements View
             .OnClickListener {
         TextView txtNumCards;
-        AppCompatButton btnCost;
+        AppCompatTextView btnCost;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
 
             txtNumCards = (TextView) itemView.findViewById(R.id.txt_num_cards);
-            btnCost = (AppCompatButton) itemView.findViewById(R.id.card_rates);
+            btnCost = (AppCompatTextView) itemView.findViewById(R.id.card_rates);
 
             itemView.setOnClickListener(this);
         }

@@ -3,5 +3,4 @@
     <string name="hello">Hello World, DatumDroidOCRActivity!</string>
     <string name="button_text">OCR!</string>
     <string name="text_hint">OCRed Text will appear here</string>
-    <string name="play_billing_license_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz0T9NH/mKrGTt98opiAoEkje/2/D11V4cs0rMU6RGQBKGB8mHZExaz+d8yST89gdfsuZ/zhgboIde5/PLP9IpHu5H0IXOxK2E5aR9JdjUjv50f+jlc4gU7uJWe9FVmfkVxlrawOx8W3K6MCOYZRDaKNYt9+ZkKx+surgfOiiF95N4ghpVMnw6FQbLXn3uRuN+Pkay6snUhppmei7gIoYkFY3Vd22j7sCPPvLUzLP7bEufjo1Crxy+2M+mOny1wQsBxjwr6P4ZCjjHWnoua/Ou9HByBHtr6Jh/Q3+G4qsHOzuxHzL3fZ08wQSwfcxyWEDNReWeDrEIszCGTl539LYQwIDAQAB</string>
 </resources>

@@ -49,8 +49,9 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.your_dialog_layout
                 , null));
+
         settingsDialog.show();
-        Toast.makeText(this, "Press back once for choices.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "PRESS BACK ONCE FOR PURCHASE.", Toast.LENGTH_LONG).show();
 
         price = new ArrayList<>();
         price.add(0, "0");

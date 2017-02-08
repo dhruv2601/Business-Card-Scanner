@@ -537,9 +537,27 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         if (id == R.id.about) {
             //Add an activity
         } else if (id == R.id.buy_cards) {
-
             Intent i = new Intent(MainActivity1.this, BillingActLib.class);
             startActivity(i);
+        }
+        else if(id==R.id.invite)
+        {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+            shareIntent.setType("text/html");
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, ("Have you tried the Business Card Scanner app?" + "\n"));   // instead send the description here
+
+            shareIntent.putExtra(Intent.EXTRA_TEXT,  " Have you tried the BC Scanner app?" + "\n" + "Scan all the your business cards digitally and never loose your cards. " + "\n" + "https://play.google.com/store/apps/details?id=businesscard.dhruv.businesscardscanner");
+            this.startActivity(Intent.createChooser(shareIntent, "Invite to use BC Scanner"));
+        }
+        else if(id==R.id.support)
+        {
+
+        }
+        else if(id==R.id.aboutMe)
+        {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

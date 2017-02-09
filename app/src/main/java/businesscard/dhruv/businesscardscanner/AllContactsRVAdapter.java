@@ -113,8 +113,8 @@ public class AllContactsRVAdapter extends RecyclerView
 
                                 Intent intent = new Intent(v.getContext(), MessagingActivity.class);
                                 intent.putExtra("RECIPIENT_ID", userList.get(i).getObjectId());
-                                intent.putExtra("RECIPIENT_NAME",MainActivity1.contactsName.get(getAdapterPosition()));
-                                intent.putExtra("RECIPIENT_NUM",MainActivity1.contactsNum.get(getAdapterPosition()));
+                                intent.putExtra("RECIPIENT_NAME", MainActivity1.contactsName.get(getAdapterPosition()));
+                                intent.putExtra("RECIPIENT_NUM", MainActivity1.contactsNum.get(getAdapterPosition()));
                                 v.getContext().startActivity(intent);
 
                                 Toast.makeText(v.getContext(), MainActivity1.contactsName.get(getAdapterPosition()) + "ABHI AA RHA HAI THAMA RHE", Toast.LENGTH_SHORT).show();

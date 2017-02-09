@@ -113,7 +113,7 @@ public class allCardRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return mCardSet.size();
+        return 0;
     }
 
     public interface MyClickListener {

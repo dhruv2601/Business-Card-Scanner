@@ -1,10 +1,15 @@
 package businesscard.dhruv.businesscardscanner;
 
+import android.*;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ public class AllCardsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    public FloatingActionButton openCam;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,25 @@ public class AllCardsFragment extends Fragment {
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mAdapter = new allCardRecyclerViewAdapter(getDataSet(), view.getContext());
+
+            openCam = (FloatingActionButton) view.findViewById(R.id.fab_open_cam);
+            openCam.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
+                    int totalCards = pref.getInt("CardNo", 0);
+                    if (totalCards >= 10) {
+                        // do not allow access SHOW PAYMENT DETAILS
+                    } else {
+                        Intent i = new Intent(getContext(), MainActivity.class);
+                        startActivity(i);
+//                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
+//                    startActivity(i);
+                    }
+                }
+            });
+
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -68,7 +93,7 @@ public class AllCardsFragment extends Fragment {
         SharedPreferences pref = getContext().getSharedPreferences("AllCards", 0);
         int x = pref.getInt("CardNo", 0);
         if (x == 0) {
-            CardObject1 object1 = new CardObject1(0,"John Doe","CEO","BC Scanner");
+            CardObject1 object1 = new CardObject1(0, "John Doe", "CEO", "BC Scanner");
             results.add(object1);
         } else {
             int totalCards = pref.getInt("CardNo", 1);

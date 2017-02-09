@@ -101,135 +101,262 @@ public class SaveCardActivity extends AppCompatActivity {
         adapter = new EntryDetailsRVAdapter(getDataSet1(), SaveCardActivity.this);
         rvEntryDetails.setAdapter(adapter);
 
+        final SharedPreferences VSR = this.getSharedPreferences("OwnCard", 0);
+        final int isMyCard = VSR.getInt("ownCardStatus", 0);
+
         fabSaveContact = (FloatingActionButton) findViewById(R.id.fab_save_contact);
         fabSaveContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // edit text mn jo data edit hua hai save that
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                cardBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] data = stream.toByteArray();
-                String convertByte = "";
+                if (isMyCard == 1) {
+                    SharedPreferences.Editor editor = VSR.edit();
 
-                int i = 0;
-                SharedPreferences pref = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
-                SharedPreferences.Editor editor = pref.edit();
-                int totalCards = pref.getInt("CardNo", 0);
-                int numEntities = entities.size();
-                for (i = 0; i < result.size(); i++) {
-                    String ty = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
-                    switch (ty) {
-                        case "Name":
-                            name = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
-                            break;
-                        case "Company":
-                            company = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
-                            break;
-                        case "Phone":
-                            no[phNo++] = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
-                            break;
-                        case "Email":
-                            email = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
-                            break;
-                        case "Website":
-                            website = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                    SharedPreferences pref = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
+                    int totalCards = pref.getInt("CardNo", 0);
+
+                    for (int i = 0; i < result.size(); i++) {
+                        String ty = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
+                        switch (ty) {
+                            case "Name":
+                                name = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Company":
+                                company = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Phone":
+                                no[phNo++] = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Email":
+                                email = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Website":
+                                website = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                        }
+
+                        editor.putString("Card" + "EntryType" + i, result.get(i).getEntryType());
+                        editor.putString("Card" + "EntryDetail" + i, result.get(i).getEntryDetails());
                     }
 
-                    editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
-                    editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
-                }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    cardBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    String convertByte = "";
+                    byte[] data = stream.toByteArray();
 
-                convertByte = Base64.encodeToString(data, Base64.DEFAULT);
-                editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
+                    convertByte = Base64.encodeToString(data, Base64.DEFAULT);
+                    editor.putString("Card" + "Photo", convertByte);
+                    editor.putInt("CardEnt", result.size() - 1);
+                    editor.putString("CardBitmap" + totalCards, convertByte);
+                    editor.putInt("cardThere", 1);
+                    editor.commit();
 
-                ++totalCards;
-                editor.putInt("CardEnt" + totalCards, result.size() - 1);
-                editor.putInt("CardNo", totalCards);
-                editor.putString("CardBitmap" + totalCards, convertByte);
-                editor.commit();
-                Log.d(TAG, "pref:: " + pref.getString("Card" + String.valueOf(totalCards) + "EntryType" + 1, "null hai bc"));
+                    ArrayList<ContentProviderOperation> ops =
+                            new ArrayList<ContentProviderOperation>();
 
-                ArrayList<ContentProviderOperation> ops =
-                        new ArrayList<ContentProviderOperation>();
-
-                ops.add(ContentProviderOperation.newInsert(
-                        ContactsContract.RawContacts.CONTENT_URI)
-                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-                        .build()
-                );
-
-                if (name != null) {
                     ops.add(ContentProviderOperation.newInsert(
-                            ContactsContract.Data.CONTENT_URI)
-                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                            .withValue(ContactsContract.Data.MIMETYPE,
-                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                            .withValue(
-                                    ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
-                                    name).build()
+                            ContactsContract.RawContacts.CONTENT_URI)
+                            .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                            .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                            .build()
                     );
-                }
 
-                for (int j = 0; j < phNo; j++) {
-                    if (no[j] != null && j == 0) {
-                        ops.add(ContentProviderOperation.
-                                newInsert(ContactsContract.Data.CONTENT_URI)
+                    if (name != null) {
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.Data.CONTENT_URI)
                                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                                 .withValue(ContactsContract.Data.MIMETYPE,
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[0])
-                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-                                .build()
+                                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                .withValue(
+                                        ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                        name).build()
                         );
-                    } else if (no[j] != null && j == 1) {
+                    }
+
+                    for (int j = 0; j < phNo; j++) {
+                        if (no[j] != null && j == 0) {
+                            ops.add(ContentProviderOperation.
+                                    newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[0])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build()
+                            );
+                        } else if (no[j] != null && j == 1) {
+                            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[1])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                                    .build());
+                        } else if (no[j] != null && j == 2) {
+                            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[2])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_WORK)
+                                    .build());
+                        }
+                    }
+                    if (email != null) {
                         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                                 .withValue(ContactsContract.Data.MIMETYPE,
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[1])
-                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                                        ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
-                                .build());
-                    } else if (no[j] != null && j == 2) {
-                        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                                .withValue(ContactsContract.Data.MIMETYPE,
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[2])
-                                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                                        ContactsContract.CommonDataKinds.Phone.TYPE_WORK)
+                                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
                                 .build());
                     }
-                }
-                if (email != null) {
-                    ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                            .withValue(ContactsContract.Data.MIMETYPE,
-                                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                            .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
-                            .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
-                            .build());
-                }
 
-                try {
-                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar snackbar = Snackbar
-                            .make(cord, "Please enable permission to save contacts", Snackbar.LENGTH_LONG);
-                    snackbar.setActionTextColor(Color.RED);
-                    snackbar.show();
+                    try {
+                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Snackbar snackbar = Snackbar
+                                .make(cord, "Please enable permission to save contacts", Snackbar.LENGTH_LONG);
+                        snackbar.setActionTextColor(Color.RED);
+                        snackbar.show();
 //                    Toast.makeText(SaveCardActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                    }
 
-                Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
-                intent.putExtra("CardPosition", totalCards - 1);
-                intent.putExtra("nobodyDIB", 1);
-                startActivity(intent);
-                SaveCardActivity.this.finish();
+
+                    Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
+                    intent.putExtra("CardPosition", totalCards - 1);
+                    intent.putExtra("nobodyDIB", 1);
+                    startActivity(intent);
+                    SaveCardActivity.this.finish();
+                } else {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    cardBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] data = stream.toByteArray();
+                    String convertByte = "";
+
+                    int i = 0;
+                    SharedPreferences pref = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
+                    SharedPreferences.Editor editor = pref.edit();
+                    int totalCards = pref.getInt("CardNo", 0);
+                    int numEntities = entities.size();
+                    for (i = 0; i < result.size(); i++) {
+                        String ty = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
+                        switch (ty) {
+                            case "Name":
+                                name = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Company":
+                                company = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Phone":
+                                no[phNo++] = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Email":
+                                email = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Website":
+                                website = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                        }
+
+                        editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
+                        editor.putString("Card" + String.valueOf(totalCards + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                    }
+
+                    convertByte = Base64.encodeToString(data, Base64.DEFAULT);
+                    editor.putString("Card" + (totalCards + 1) + "Photo", convertByte);
+
+                    ++totalCards;
+                    editor.putInt("CardEnt" + totalCards, result.size() - 1);
+                    editor.putInt("CardNo", totalCards);
+                    editor.putString("CardBitmap" + totalCards, convertByte);
+                    editor.commit();
+                    Log.d(TAG, "pref:: " + pref.getString("Card" + String.valueOf(totalCards) + "EntryType" + 1, "null hai bc"));
+
+                    ArrayList<ContentProviderOperation> ops =
+                            new ArrayList<ContentProviderOperation>();
+
+                    ops.add(ContentProviderOperation.newInsert(
+                            ContactsContract.RawContacts.CONTENT_URI)
+                            .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                            .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                            .build()
+                    );
+
+                    if (name != null) {
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.Data.CONTENT_URI)
+                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                .withValue(ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                .withValue(
+                                        ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                        name).build()
+                        );
+                    }
+
+                    for (int j = 0; j < phNo; j++) {
+                        if (no[j] != null && j == 0) {
+                            ops.add(ContentProviderOperation.
+                                    newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[0])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build()
+                            );
+                        } else if (no[j] != null && j == 1) {
+                            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[1])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                                    .build());
+                        } else if (no[j] != null && j == 2) {
+                            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, no[2])
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_WORK)
+                                    .build());
+                        }
+                    }
+                    if (email != null) {
+                        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                .withValue(ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
+                                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
+                                .build());
+                    }
+
+                    try {
+                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Snackbar snackbar = Snackbar
+                                .make(cord, "Please enable permission to save contacts", Snackbar.LENGTH_LONG);
+                        snackbar.setActionTextColor(Color.RED);
+                        snackbar.show();
+//                    Toast.makeText(SaveCardActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
+                    intent.putExtra("CardPosition", totalCards - 1);
+                    intent.putExtra("nobodyDIB", 1);
+                    startActivity(intent);
+                    SaveCardActivity.this.finish();
+                }
             }
         });
 
@@ -276,6 +403,10 @@ public class SaveCardActivity extends AppCompatActivity {
         cardBitmap = BitmapFactory.decodeFile(String.valueOf(imageUri), options);
 
         imgScanned.setImageBitmap(cardBitmap);
+
+        SharedPreferences.Editor edit = VSR.edit();
+        edit.putInt("ownCardStatus", 0);
+        edit.commit();
 
         SharedPreferences pref = this.getSharedPreferences("engDataSet", 0);
         dataSetUrl = pref.getString("dataSetUrl", "");
@@ -629,7 +760,7 @@ public class SaveCardActivity extends AppCompatActivity {
             Log.d(TAG, "dataSetUrl: " + dataSetUrl);
             for (int i = 0; i < dataSetUrl.length(); i++) {
                 if (i >= 7) {
-                    if (dataSetUrl.charAt(i) == 't' && dataSetUrl.charAt(i + 1) == 'e' && dataSetUrl.charAt(i+2) == 's' && dataSetUrl.charAt(i+3) == 's') {
+                    if (dataSetUrl.charAt(i) == 't' && dataSetUrl.charAt(i + 1) == 'e' && dataSetUrl.charAt(i + 2) == 's' && dataSetUrl.charAt(i + 3) == 's') {
                         break;
                     } else {
                         tempUri += dataSetUrl.charAt(i);

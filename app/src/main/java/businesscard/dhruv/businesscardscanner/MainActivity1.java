@@ -166,7 +166,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             }
         }
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -198,6 +197,13 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
             // doing the cloud backup every time app connected to net
         }
+
+        SharedPreferences pref2 = this.getSharedPreferences("engDataSet", 0);
+        SharedPreferences.Editor edit = pref2.edit();
+        edit.putString("dataSetUrl", "file:///storage/emulated/0/mounted/tessdata/eng.traineddata");
+        edit.commit();
+
+        file:///storage/emulated/0/mounted/tessdata/eng.traineddata
 
         sref = MainActivity1.this.getSharedPreferences("entered", 0);
         SharedPreferences.Editor editor = sref.edit();
@@ -276,34 +282,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
 
 //        search = (EditText) findViewById(R.id.edt_search);
 
-        openCam = (FloatingActionButton) findViewById(R.id.fab_open_cam);
-        openCam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                3);
-                    }
-                }
-
-                SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
-                int totalCards = pref.getInt("CardNo", 0);
-                if (totalCards >= 10) {
-                    // do not allow access SHOW PAYMENT DETAILS
-                } else {
-//                    Intent i = new Intent(MainActivity1.this, MainActivity.class);
-//                    startActivity(i);
-//                    MainActivity1.this.finish();
-
-                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
-                    startActivity(i);
-                }
-            }
-        });
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -330,14 +308,15 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         SharedPreferences pref = this.getSharedPreferences("perms", 0);
         int aContact = pref.getInt("contact", 0);
         int aCamera = pref.getInt("camera", 0);
-        if (aCamera == 0 || aContact == 0) {
-            PageAdapterTillPerm adapterTillPerm = new PageAdapterTillPerm(getSupportFragmentManager(), tabLayout.getTabCount());
-            viewPager.setAdapter(adapterTillPerm);
-            tabLayout.setupWithViewPager(viewPager);
-        } else {
-            viewPager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(viewPager);
-        }
+//        if (aCamera == 0 || aContact == 0) {
+//            PageAdapterTillPerm adapterTillPerm = new PageAdapterTillPerm(getSupportFragmentManager(), tabLayout.getTabCount());
+//            viewPager.setAdapter(adapterTillPerm);
+//            tabLayout.setupWithViewPager(viewPager);
+//        } else {
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+//        }
+
         Log.d(TAG, "setAdapter");
 
         viewPager.setCurrentItem(1);
@@ -519,7 +498,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
 //            Log.d(TAG, "onOptionsItemSelected: action_settings");
 //            return true;
 //        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -539,24 +517,18 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.buy_cards) {
             Intent i = new Intent(MainActivity1.this, BillingActLib.class);
             startActivity(i);
-        }
-        else if(id==R.id.invite)
-        {
+        } else if (id == R.id.invite) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
             shareIntent.setType("text/html");
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, ("Have you tried the Business Card Scanner app?" + "\n"));   // instead send the description here
 
-            shareIntent.putExtra(Intent.EXTRA_TEXT,  " Have you tried the BC Scanner app?" + "\n" + "Scan all the your business cards digitally and never loose your cards. " + "\n" + "https://play.google.com/store/apps/details?id=businesscard.dhruv.businesscardscanner");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, " Have you tried the BC Scanner app?" + "\n" + "Scan all the your business cards digitally and never loose your cards. " + "\n" + "https://play.google.com/store/apps/details?id=businesscard.dhruv.businesscardscanner");
             this.startActivity(Intent.createChooser(shareIntent, "Invite to use BC Scanner"));
-        }
-        else if(id==R.id.support)
-        {
+        } else if (id == R.id.support) {
 
-        }
-        else if(id==R.id.aboutMe)
-        {
+        } else if (id == R.id.aboutMe) {
 
         }
 

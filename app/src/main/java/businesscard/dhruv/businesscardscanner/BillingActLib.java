@@ -82,6 +82,9 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Intent i = new Intent(BillingActLib.this,ThankYouAct.class);
+                startActivity(i);
+                BillingActLib.this.finish();
                 Toast.makeText(BillingActLib.this, "Thanks for the purchase. Now you can enjoy more cards!", Toast.LENGTH_SHORT).show();
             }
         });

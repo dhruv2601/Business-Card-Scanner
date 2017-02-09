@@ -121,7 +121,18 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
             @Override
             public void run() {
                 setCameraPhotoQuality(camera);
-                camera.takePicture(null, null, currentInstance);
+
+                camera.cancelAutoFocus();
+                camera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override // didnt check for boolean as i already have manual autofocus , but can check is
+                    //  autofocus is in call                         mIsAutoFocusing = false;
+
+                    public void onAutoFocus(boolean b, Camera camera) {
+                        camera.takePicture(null, null, currentInstance);
+                    }
+                });
+
+//                camera.takePicture(null, null, currentInstance);
             }
         });
     }
@@ -209,6 +220,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
     public Size getPhotoSizeForQuality(@AnncaConfiguration.MediaQuality int mediaQuality) {
         return CameraHelper.getPictureSize(Size.fromList(camera.getParameters().getSupportedPictureSizes()), mediaQuality);
     }
+
 
     @Override
     protected void prepareCameraOutputs() {

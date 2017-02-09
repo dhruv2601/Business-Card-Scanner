@@ -72,15 +72,4 @@
         android:layout_marginTop="105dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_open_cam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:src="@drawable/lightnings"
-        app:fabSize="normal" />
-
 </RelativeLayout>

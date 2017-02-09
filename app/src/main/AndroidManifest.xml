@@ -89,7 +89,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Try"></activity>
+        <activity android:name=".Try" />
+        <activity android:name=".ThankYouAct" />
+        <activity android:name=".UserKaCard"></activity>
     </application>
 
 </manifest>

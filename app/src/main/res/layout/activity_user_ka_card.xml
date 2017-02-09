@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_user_ka_card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="businesscard.dhruv.businesscardscanner.UserKaCard">
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/appCompatButton"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="132dp"
+        android:background="@drawable/background"
+        android:fontFamily="serif"
+        android:text="Scan Your Own Card"
+        android:textColor="@color/off_white"
+        android:textSize="25dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/scan_own_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:src="@drawable/appicon"
+        app:fabSize="normal" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/own_card_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/scan_own_card"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="30dp"
+        android:scrollbars="vertical" />
+
+</RelativeLayout>

@@ -24,7 +24,7 @@ public class PageAdapter extends FragmentStatePagerAdapter {
         Log.d(TAG, "pos: " + position);
         switch (position) {
             case 0:
-                return new ChatFragment();
+                return new UserKaCard();
 
             case 1:
                 return new AllCardsFragment();

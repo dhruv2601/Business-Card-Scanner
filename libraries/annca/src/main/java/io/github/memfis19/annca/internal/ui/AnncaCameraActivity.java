@@ -2,13 +2,17 @@ package io.github.memfis19.annca.internal.ui;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Camera;
+import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraDevice;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -73,6 +77,7 @@ abstract public class AnncaCameraActivity<CameraId> extends Activity
         onProcessBundle(savedInstanceState);
         setUserContent();
     }
+
 
     protected void onProcessBundle(Bundle savedInstanceState) {
 

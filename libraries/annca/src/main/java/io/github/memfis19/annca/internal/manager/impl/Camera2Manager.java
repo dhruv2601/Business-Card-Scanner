@@ -1,7 +1,9 @@
 package io.github.memfis19.annca.internal.manager.impl;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
@@ -20,6 +22,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -216,6 +219,16 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 }
                 prepareCameraOutputs();
                 try {
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
                     manager.openCamera(currentCameraId, stateCallback, backgroundHandler);
                 } catch (Exception e) {
                     Log.e(TAG, "openCamera: ", e);
@@ -261,7 +274,6 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 lockFocus();
             }
         });
-
     }
 
     @Override

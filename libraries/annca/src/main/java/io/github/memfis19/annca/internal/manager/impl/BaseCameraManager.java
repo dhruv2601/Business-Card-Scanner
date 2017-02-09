@@ -104,6 +104,7 @@ abstract class BaseCameraManager<CameraId, SurfaceListener>
         }
     }
 
+
     @Override
     public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
         if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED == what) {

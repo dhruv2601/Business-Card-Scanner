@@ -194,7 +194,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             installation.put("user", user);
             installation.saveInBackground();
 
-            LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("businesscard.dhruv.businesscardscanner.MainActivity1"));
             // doing the cloud backup every time app connected to net
         }
 
@@ -342,9 +341,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
 
 //        toggle.setDrawerIndicatorEnabled(true);
         drawer.setDrawerListener(toggle);
-
-        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-        startService(serviceIntent);
 //        new getContacts().execute();
     }
 

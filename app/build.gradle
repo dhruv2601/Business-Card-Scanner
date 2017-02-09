@@ -53,5 +53,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':tess-two')
     compile project(':annca')
-    compile files('src/main/java/libs/sinch-android-rtc-3.9.10.jar')
 }

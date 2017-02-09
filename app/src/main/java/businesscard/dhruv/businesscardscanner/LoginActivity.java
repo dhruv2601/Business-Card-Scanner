@@ -18,8 +18,6 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.sinch.android.rtc.Sinch;
-import com.sinch.android.rtc.SinchClient;
 
 public class LoginActivity extends AppCompatActivity {
 

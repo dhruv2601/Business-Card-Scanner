@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -38,12 +40,18 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
     BillingProcessor bp;
     private ArrayList<String> price;
 
+    private TextView txt;
+    private ProgressBar pBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_billing);
+
+        txt = (TextView) findViewById(R.id.fetching);
+        pBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Dialog settingsDialog = new Dialog(this);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -151,6 +159,8 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
             protected void onPostExecute(List<String> productList) {
                 super.onPostExecute(productList);
 
+                txt.setVisibility(View.GONE);
+                pBar.setVisibility(View.GONE);
                 price.add(0, productList.get(0));
                 price.add(1, productList.get(1));
                 price.add(2, productList.get(2));

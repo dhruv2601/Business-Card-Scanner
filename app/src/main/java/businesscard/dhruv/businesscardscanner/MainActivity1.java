@@ -203,7 +203,7 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         edit.putString("dataSetUrl", "file:///storage/emulated/0/mounted/tessdata/eng.traineddata");
         edit.commit();
 
-        file:///storage/emulated/0/mounted/tessdata/eng.traineddata
+//        file:///storage/emulated/0/mounted/tessdata/eng.traineddata
 
         sref = MainActivity1.this.getSharedPreferences("entered", 0);
         SharedPreferences.Editor editor = sref.edit();
@@ -276,7 +276,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             }
         };
 
-
         contactsName = new ArrayList<>();
         contactsNum = new ArrayList<>();
 
@@ -320,9 +319,9 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         Log.d(TAG, "setAdapter");
 
         viewPager.setCurrentItem(1);
-        tabLayout.getTabAt(0).setText("CHATS");
+        tabLayout.getTabAt(0).setText("MY CARD");
         tabLayout.getTabAt(1).setText("CARDS");
-        tabLayout.getTabAt(2).setText("CONTACTS");
+        tabLayout.getTabAt(2).setText("SETTINGS");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -363,16 +362,16 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Log.d(TAG, "ContactsPermRec");
-                    final PageAdapter adapter = new PageAdapter
-                            (getSupportFragmentManager(), tabLayout.getTabCount());
-                    viewPager.setAdapter(adapter);
-                    tabLayout.setupWithViewPager(viewPager);
-                    viewPager.setCurrentItem(1);
-                    editor.putInt("contact", 1);
-                    contactPerm = 1;
-                    tabLayout.getTabAt(0).setText("CHATS");
-                    tabLayout.getTabAt(1).setText("CARDS");
-                    tabLayout.getTabAt(2).setText("CONTACTS");
+//                    final PageAdapter adapter = new PageAdapter
+//                            (getSupportFragmentManager(), tabLayout.getTabCount());
+//                    viewPager.setAdapter(adapter);
+//                    tabLayout.setupWithViewPager(viewPager);
+//                    viewPager.setCurrentItem(1);
+//                    editor.putInt("contact", 1);
+//                    contactPerm = 1;
+//                    tabLayout.getTabAt(0).setText("CHATS");
+//                    tabLayout.getTabAt(1).setText("CARDS");
+//                    tabLayout.getTabAt(2).setText("CONTACTS");
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.

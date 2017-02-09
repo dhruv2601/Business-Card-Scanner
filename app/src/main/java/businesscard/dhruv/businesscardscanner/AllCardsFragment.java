@@ -86,16 +86,17 @@ public class AllCardsFragment extends Fragment {
     }
 
     // Save each card info into shared prefs and build the arrayList using them every time and in case they are empty sync up to check if the user has deleted the data
-
     public ArrayList<CardObject1> getDataSet() {
         ArrayList results = new ArrayList<CardObject1>();
-
+        Log.d(TAG,"insideAllCardFrag");
         SharedPreferences pref = getContext().getSharedPreferences("AllCards", 0);
         int x = pref.getInt("CardNo", 0);
         if (x == 0) {
+            Log.d(TAG,"noCards");
             CardObject1 object1 = new CardObject1(0, "John Doe", "CEO", "BC Scanner");
             results.add(object1);
         } else {
+            Log.d(TAG,"cardsExists");
             int totalCards = pref.getInt("CardNo", 1);
             int index = 0;
 

@@ -46,7 +46,7 @@ public class allCardRecyclerViewAdapter
             txtPosition = (TextView) itemView.findViewById(R.id.txt_position_all_card);
             txtCompany = (TextView) itemView.findViewById(R.id.txt_company_all_card);
 
-            Log.d(TAG,"dataObjHolderALLCARDS");
+            Log.d(TAG, "dataObjHolderALLCARDS");
             itemView.setOnClickListener(this);
         }
 
@@ -54,7 +54,7 @@ public class allCardRecyclerViewAdapter
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), ShowCardDetails.class);
             int pos = getAdapterPosition();
-            i.putExtra("CardPosition",pos);
+            i.putExtra("CardPosition", pos);
 
 //            i.putExtra("")                                    // yahan pe sending timke par snd the phone no.s and ither details
             v.getContext().startActivity(i);
@@ -69,6 +69,9 @@ public class allCardRecyclerViewAdapter
 
     public allCardRecyclerViewAdapter(ArrayList<CardObject1> myCardSet, Context context) {
         mCardSet = myCardSet;
+        for (int i = 0; i < myCardSet.size(); i++) {
+            Log.d(TAG, "mCardSetVal: " + mCardSet.get(i).getTxtName());
+        }
         this.context = context;
     }
 
@@ -78,7 +81,7 @@ public class allCardRecyclerViewAdapter
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.all_cards_list_cardview, parent, false);
 
-        Log.d(TAG,"onCrateViewHolderOfAllCArds");
+        Log.d(TAG, "onCrateViewHolderOfAllCArds");
         DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
         return dataObjectHolder;
     }
@@ -86,12 +89,13 @@ public class allCardRecyclerViewAdapter
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.txtName.setText(mCardSet.get(position).getTxtName());
+        Log.d(TAG, "mCardValS: " + mCardSet.get(position).getTxtName());
         if (mCardSet.get(position).getmDrawableImage() != 0) {
             holder.imageDrawable.setImageResource(mCardSet.get(position).getmDrawableImage());
         } else {
-            char ch='A';
-            if(mCardSet.get(position).getTxtName().length()>0) {
-                 ch = mCardSet.get(position).getTxtName().charAt(0);
+            char ch = 'A';
+            if (mCardSet.get(position).getTxtName().length() > 0) {
+                ch = mCardSet.get(position).getTxtName().charAt(0);
             }
             TextDrawable drawable = TextDrawable.builder().beginConfig().fontSize(100).bold().endConfig()
                     .buildRect(String.valueOf(ch).toUpperCase(), Color.rgb(0, 105, 0));
@@ -113,7 +117,13 @@ public class allCardRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return 0;
+        int x = 0;
+        if (mCardSet == null) {
+            x = 0;
+        } else {
+            x = mCardSet.size();
+        }
+        return x;
     }
 
     public interface MyClickListener {

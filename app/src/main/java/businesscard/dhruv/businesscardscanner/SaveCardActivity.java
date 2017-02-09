@@ -145,7 +145,7 @@ public class SaveCardActivity extends AppCompatActivity {
                     byte[] data = stream.toByteArray();
 
                     convertByte = Base64.encodeToString(data, Base64.DEFAULT);
-                    editor.putString("Card" + "Photo", convertByte);
+                    editor.putString("Card" + totalCards + 1 + "Photo", convertByte);
                     editor.putInt("CardEnt", result.size() - 1);
                     editor.putString("CardBitmap" + totalCards, convertByte);
                     editor.putInt("cardThere", 1);
@@ -225,7 +225,6 @@ public class SaveCardActivity extends AppCompatActivity {
                         snackbar.show();
 //                    Toast.makeText(SaveCardActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
 
                     Intent intent = new Intent(view.getContext(), ShowCardDetails.class);
                     intent.putExtra("CardPosition", totalCards - 1);

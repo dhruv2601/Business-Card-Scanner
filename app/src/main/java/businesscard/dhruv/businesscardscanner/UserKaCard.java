@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class UserKaCard extends Fragment {
 
+    private static final String TAG = "USerCard";
     private View view;
     private FloatingActionButton scanOwnCard;
     private RecyclerView mRecyclerView;
@@ -43,7 +45,7 @@ public class UserKaCard extends Fragment {
 //            if (cardThere == 0) {
 //                mAdapter = new allCardRecyclerViewAdapter(getDataSetEmpty(), view.getContext());
 //            } else {
-                mAdapter = new allCardRecyclerViewAdapter(getDataSet(), view.getContext());
+            mAdapter = new allCardRecyclerViewAdapter(getDataSet(), view.getContext());
 //            }
             scanOwnCard = (FloatingActionButton) view.findViewById(R.id.scan_own_card);
             scanOwnCard.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +88,8 @@ public class UserKaCard extends Fragment {
                 company = VSR.getString("Card" + "EntryDetail" + i, "");
             }
         }
+        Log.d(TAG, "name+company : " + name + "\n" + company);
+
         CardObject1 obj = new CardObject1(0, name, "", company); // make a map of images and the service and provide that here
         results.add(obj);
         return results;

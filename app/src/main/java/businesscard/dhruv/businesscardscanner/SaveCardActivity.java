@@ -116,6 +116,10 @@ public class SaveCardActivity extends AppCompatActivity {
                     SharedPreferences pref = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
                     int totalCards = pref.getInt("CardNo", 0);
 
+                    SharedPreferences preferences = SaveCardActivity.this.getSharedPreferences("SavedCards", 0);
+                    cardNo = preferences.getInt("CardNo", 1);
+                    imageUri = preferences.getString("ImageUri" + cardNo, "");
+
                     for (int i = 0; i < result.size(); i++) {
                         String ty = pref.getString("Card" + String.valueOf(totalCards + 1) + "EntryType" + i, result.get(i).getEntryType());
                         switch (ty) {
@@ -150,6 +154,49 @@ public class SaveCardActivity extends AppCompatActivity {
                     editor.putString("CardBitmap" + totalCards, convertByte);
                     editor.putInt("cardThere", 1);
                     editor.commit();
+
+                    ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
+                    cardBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] data1 = stream.toByteArray();
+                    String convertByte1 = "";
+
+                    int i = 0;
+                    SharedPreferences pref1 = SaveCardActivity.this.getSharedPreferences("AllCards", 0);
+                    SharedPreferences.Editor editor1 = pref.edit();
+                    int totalCards1 = pref.getInt("CardNo", 0);
+                    int numEntities = entities.size();
+                    for (i = 0; i < result.size(); i++) {
+                        String ty = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryType" + i, result.get(i).getEntryType());
+                        switch (ty) {
+                            case "Name":
+                                name = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Company":
+                                company = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Phone":
+                                no[phNo++] = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Email":
+                                email = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                                break;
+                            case "Website":
+                                website = pref1.getString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                        }
+
+                        editor1.putString("Card" + String.valueOf(totalCards1 + 1) + "EntryType" + i, result.get(i).getEntryType());
+                        editor1.putString("Card" + String.valueOf(totalCards1 + 1) + "EntryDetail" + i, result.get(i).getEntryDetails());
+                    }
+
+                    convertByte1 = Base64.encodeToString(data, Base64.DEFAULT);
+                    editor1.putString("Card" + (totalCards1 + 1) + "Photo", convertByte1);
+
+                    ++totalCards1;
+                    editor1.putInt("CardEnt" + totalCards1, result.size() - 1);
+                    editor1.putInt("CardNo", totalCards1);
+                    editor1.putString("CardBitmap" + totalCards1, convertByte1);
+                    editor1.commit();
+                    Log.d(TAG, "pref:: " + pref.getString("Card" + String.valueOf(totalCards) + "EntryType" + 1, "null hai bc"));
 
                     ArrayList<ContentProviderOperation> ops =
                             new ArrayList<ContentProviderOperation>();

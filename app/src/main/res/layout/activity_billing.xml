@@ -27,7 +27,7 @@
         android:textStyle="bold" />
 
     <ProgressBar
-        android:id="@+id/progress"
+        android:id="@+id/progressBar1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true" />

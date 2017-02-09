@@ -51,7 +51,7 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
         setContentView(R.layout.activity_billing);
 
         txt = (TextView) findViewById(R.id.fetching);
-        pBar = (ProgressBar) findViewById(R.id.progressBar);
+        pBar = (ProgressBar) findViewById(R.id.progressBar1);
 
         Dialog settingsDialog = new Dialog(this);
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);

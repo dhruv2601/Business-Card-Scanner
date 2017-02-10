@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_variety_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/handshake"
+    tools:context="businesscard.dhruv.businesscardscanner.VarietyFragment">
+
+    <com.daimajia.androidviewhover.BlurLayout
+        android:id="@+id/blur_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="45dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/overlay"
+            android:text=" \n Send Your Card"
+            android:textAlignment="center"
+            android:textColor="@color/off_white"
+            android:textSize="30dp"
+            android:textStyle="normal" />
+    </com.daimajia.androidviewhover.BlurLayout>
+
+
+    <com.daimajia.androidviewhover.BlurLayout
+        android:id="@+id/blur_layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blur_layout2"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/overlay"
+            android:text=" \n Shop For Cards / Donate"
+            android:textAlignment="center"
+            android:textColor="@color/off_white"
+            android:textSize="30dp"
+            android:textStyle="normal" />
+    </com.daimajia.androidviewhover.BlurLayout>
+
+    <com.daimajia.androidviewhover.BlurLayout
+        android:id="@+id/blur_layout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blur_layout3"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/overlay"
+            android:text=" \n About"
+            android:textAlignment="center"
+            android:textColor="@color/off_white"
+            android:textSize="30dp"
+            android:textStyle="normal" />
+    </com.daimajia.androidviewhover.BlurLayout>
+
+    <com.daimajia.androidviewhover.BlurLayout
+        android:id="@+id/blur_layout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blur_layout4"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/overlay"
+            android:text=" \n Support"
+            android:textAlignment="center"
+            android:textColor="@color/off_white"
+            android:textSize="30dp"
+            android:textStyle="normal" />
+    </com.daimajia.androidviewhover.BlurLayout>
+
+
+</RelativeLayout>

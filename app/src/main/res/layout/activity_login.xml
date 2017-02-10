@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/backk"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -64,21 +64,16 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/forgot_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textSize="20dp" />
-
-        <TextView
             android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
+            android:background="@color/windowBackground"
+            android:textColor="@color/colorAccent"
             android:gravity="center"
             android:text="No account yet? Create one"
-            android:textSize="24dip"
+            android:textSize="18dip"
             android:textStyle="bold" />
 
     </LinearLayout>

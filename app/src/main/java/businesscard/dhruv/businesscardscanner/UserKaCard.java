@@ -7,6 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class UserKaCard extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private AppCompatButton txt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,16 @@ public class UserKaCard extends Fragment {
                     startActivity(i);
                 }
             });
+
+            txt = (AppCompatButton) view.findViewById(R.id.view_card);
+            txt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), ShowCardDetails.class);
+                    startActivity(i);
+                }
+            });
+
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;

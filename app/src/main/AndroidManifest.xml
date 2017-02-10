@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="businesscard.dhruv.businesscardscanner"
     android:installLocation="preferExternal">
 
@@ -33,11 +34,12 @@
     <application
         android:name=".ParseInit"
         android:allowBackup="true"
-        android:icon="@mipmap/payment_method"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <activity android:name=".MainActivity" />
         <activity
             android:name="io.github.memfis19.annca.internal.ui.camera.Camera1Activity"
@@ -62,18 +64,10 @@
         <activity android:name=".MainActivity1" />
         <activity android:name=".AllCardsFragment" />
         <activity android:name=".ShowCardDetails" />
-        <activity android:name=".AllContacts" />
         <activity
             android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".CreateAccount" />
-        <activity
-            android:name=".MessagingActivity"
-            android:screenOrientation="portrait" />
-
-        <service android:name=".MessageService" />
-
-        <activity android:name=".ChatFragment" />
         <activity android:name=".FullImage" />
         <activity
             android:name=".SaveCardActivity"
@@ -91,7 +85,11 @@
         </activity>
         <activity android:name=".Try" />
         <activity android:name=".ThankYouAct" />
-        <activity android:name=".UserKaCard"></activity>
+        <activity android:name=".UserKaCard" />
+        <activity android:name=".VarietyFragment" />
+        <activity android:name=".AboutDeveloper" />
+        <activity android:name=".AboutActivity"></activity>
+
     </application>
 
 </manifest>

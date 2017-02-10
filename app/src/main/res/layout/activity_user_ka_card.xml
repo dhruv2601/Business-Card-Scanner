@@ -5,21 +5,18 @@
     android:id="@+id/activity_user_ka_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/backkk"
     tools:context="businesscard.dhruv.businesscardscanner.UserKaCard">
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="132dp"
-        android:background="@drawable/background"
-        android:fontFamily="serif"
-        android:text="Scan Your Own Card"
-        android:textColor="@color/off_white"
-        android:textSize="25dp" />
+    <TextView
+        android:text="SCAN YOUR CARD"
+        android:layout_centerInParent="true"
+        android:layout_above="@+id/scan_own_card"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/scan_own_card"
@@ -28,11 +25,12 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:clickable="true"
-        android:src="@drawable/appicon"
+        android:src="@drawable/add"
         app:fabSize="normal" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/own_card_rv"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/scan_own_card"
@@ -40,4 +38,16 @@
         android:layout_marginTop="30dp"
         android:scrollbars="vertical" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/view_card"
+        android:background="@color/overlay"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="VIEW OWN CARD"
+        android:textSize="23dp"
+        android:textColor="@color/off_white"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:fontFamily="serif"
+        android:layout_height="50dp" />
 </RelativeLayout>

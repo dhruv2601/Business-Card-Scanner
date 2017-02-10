@@ -30,7 +30,7 @@ public class PageAdapter extends FragmentStatePagerAdapter {
                 return new AllCardsFragment();
 
             case 2:
-                return new AllCardsFragment();
+                return new VarietyFragment();
 
             default:
                 return null;

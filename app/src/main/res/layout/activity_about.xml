@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_about"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backk"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="businesscard.dhruv.businesscardscanner.AboutActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:id="@+id/about_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background"
+            android:fontFamily="serif"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="The project is aimed at the betterment of the world around us, to reduce the sufferings of the sufferers. This thought all started when one fine day the developer realized the hardships that blind people faces in their everyday life, how difficult it becomes to survive in the world without lights.
+Thus to do my part as far as I this project was initiated to donate for the cause.\n
+                                                   BRINGING COLORS TO LIFE \n
+            Business Card Scanner is an Optical Character Recognition(OCR) application that has an inbuilt scanning technology that automatically reads data from the business card.
+Your data is completely safe with us as it is covered up by encryption.
+"
+
+            android:textColor="@color/off_white"
+            android:textIsSelectable="true"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+    </ScrollView>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/abt_dev"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/overlay"
+        android:text="About Developer"
+        android:textColor="@color/off_white"
+        android:textSize="20dp" />
+</RelativeLayout>

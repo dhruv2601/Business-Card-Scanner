@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 //                .build());
 
         btnLogin = (AppCompatButton) findViewById(R.id.btn_login);
-        forgotPassword = (TextView) findViewById(R.id.forgot_password);
+//        forgotPassword = (TextView) findViewById(R.id.forgot_password);
         createAccount = (TextView) findViewById(R.id.link_signup);
         edtMobile = (EditText) findViewById(R.id.input_p_number);
         edtPass = (EditText) findViewById(R.id.input_password);
@@ -72,8 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = new Intent(LoginActivity.this, MainActivity1.class);
             LoginActivity.this.finish();
             startActivity(i);
-        }
-        else {
+        } else {
 //            final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
 //            startService(serviceIntent);
 

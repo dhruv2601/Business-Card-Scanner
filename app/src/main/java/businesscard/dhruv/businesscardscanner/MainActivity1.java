@@ -473,7 +473,6 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
     }
 

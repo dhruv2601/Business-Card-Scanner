@@ -39,6 +39,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:debuggable="false"
         tools:replace="android:icon">
         <activity android:name=".MainActivity" />
         <activity

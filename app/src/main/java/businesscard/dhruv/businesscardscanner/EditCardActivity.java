@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -48,12 +50,14 @@ public class EditCardActivity extends AppCompatActivity {
     public static String type[] = new String[30];
     public static String desc[] = new String[30];
     private String imageUri;
+    private CoordinatorLayout cord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_card);
 
+        cord = (CoordinatorLayout) findViewById(R.id.cord1);
         Intent intent = new Intent();
         intent = getIntent();
         cardNo = intent.getIntExtra("CardNo", 0);
@@ -70,7 +74,12 @@ public class EditCardActivity extends AppCompatActivity {
         rvEntryDetails.setAdapter(adapter);
 
         fabSaveContact = (FloatingActionButton) findViewById(R.id.fab_save_contact);
-        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
+
+        Snackbar snackbar = Snackbar
+                .make(cord, "Select the ticks on right to save entries", Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
 
         fabSaveContact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +114,10 @@ public class EditCardActivity extends AppCompatActivity {
         addAnotherField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EditCardActivity.this, "Touch the TICKS on right after done.", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar
+                        .make(cord, "Select the ticks on right to save entries", Snackbar.LENGTH_LONG);
+                snackbar.setActionTextColor(Color.RED);
+                snackbar.show();
                 int yet = 0;
 
                 DataObjectCardEntry cardEntry = new DataObjectCardEntry("", "");

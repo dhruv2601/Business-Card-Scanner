@@ -66,13 +66,13 @@
         <TextView
             android:id="@+id/link_signup"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="60dp"
             android:background="@color/windowBackground"
-            android:textColor="@color/colorAccent"
             android:gravity="center"
             android:text="No account yet? Create one"
+            android:textColor="@color/colorAccent"
             android:textSize="18dip"
             android:textStyle="bold" />
 

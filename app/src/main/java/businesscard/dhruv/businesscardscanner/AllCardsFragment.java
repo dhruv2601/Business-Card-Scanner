@@ -56,11 +56,11 @@ public class AllCardsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    SharedPreferences pref1 = v.getContext().getSharedPreferences("engDataSet", 0);
-                    String isThere = pref1.getString("downloaded", "0");
-                    if (isThere.equals("0")) {
-                        Toast.makeText(v.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
-                    } else {
+//                    SharedPreferences pref1 = v.getContext().getSharedPreferences("engDataSet", 0);
+//                    String isThere = pref1.getString("downloaded", "0");
+//                    if (isThere.equals("0")) {
+//                        Toast.makeText(v.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
+//                    } else {
 
                         SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
                         int totalCards = pref.getInt("CardNo", 0);
@@ -69,10 +69,11 @@ public class AllCardsFragment extends Fragment {
                         } else {
                             Intent i = new Intent(getContext(), MainActivity.class);
                             startActivity(i);
+                            AllCardsFragment.this.getActivity().finish();
 //                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
 //                    startActivity(i);
                         }
-                    }
+//                    }
                 }
             });
 

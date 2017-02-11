@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/blur_layout2"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="90dp">
+        android:layout_marginTop="80dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -88,5 +88,14 @@
             android:textStyle="normal" />
     </com.daimajia.androidviewhover.BlurLayout>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/signout"
+        android:layout_alignParentBottom="true"
+        android:background="@color/overlay"
+        android:text="SIGN OUT"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="25dp"
+        android:textStyle="normal" />
 
 </RelativeLayout>

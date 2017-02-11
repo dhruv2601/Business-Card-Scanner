@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,12 +23,14 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidviewhover.BlurLayout;
+import com.parse.ParseUser;
 
 public class VarietyFragment extends Fragment {
 
     private View view;
     private BlurLayout mSampleLayout2, mSampleLayout3, mSampleLayout4, mSampleLayout5;
     private boolean b;
+    private AppCompatButton signOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,17 @@ public class VarietyFragment extends Fragment {
 //            mSampleLayout2.addChildAppearAnimator(hover2, R.id.avatar, Techniques.DropOut, 1200);
 //            mSampleLayout2.addChildDisappearAnimator(hover2, R.id.avatar, Techniques.FadeOutUp);
 //            mSampleLayout2.setBlurDuration(1000);
+
+            signOut = (AppCompatButton) view.findViewById(R.id.signout);
+            signOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ParseUser.logOut();
+                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                    VarietyFragment.this.getActivity().finish();
+                    startActivity(i);
+                }
+            });
 
             mSampleLayout3 = (BlurLayout) view.findViewById(R.id.blur_layout3);
             View hover3 = LayoutInflater.from(view.getContext()).inflate(R.layout.hover_sample3, null);

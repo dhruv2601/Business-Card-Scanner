@@ -31,7 +31,7 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
 
     private List<SkuDetails> productLists;
 
-    public static final String cards10 = "data.pole.10cards";
+    public static final String cards10 = "testing.bcs.1";
     public static final String cards25 = "data.pole.cards25";
     public static final String cards50 = "data.pole.50cards";
     public static final String cards100 = "data.pole.100cards";

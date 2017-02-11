@@ -30,8 +30,8 @@
 
             <ImageView
                 android:id="@+id/view_full"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@color/tealShade"
                 android:src="@drawable/viewimg" />
         </android.support.design.widget.CollapsingToolbarLayout>

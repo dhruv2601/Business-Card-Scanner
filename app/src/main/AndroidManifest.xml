@@ -88,8 +88,10 @@
         <activity android:name=".UserKaCard" />
         <activity android:name=".VarietyFragment" />
         <activity android:name=".AboutDeveloper" />
-        <activity android:name=".AboutActivity"></activity>
-
+        <activity android:name=".AboutActivity" />
+        <activity
+            android:name=".ActivityIntro"
+            android:theme="@style/Theme.Intro" />
     </application>
 
 </manifest>

@@ -18,10 +18,12 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -96,7 +98,7 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
     public static SharedPreferences sref;
     public static boolean hasEntered;
     public InputStream isPerson;
-    private boolean b;
+    public boolean b;
     public int totalCardNum;
     private DownloadManager dm;
     private long enqueue;
@@ -223,6 +225,9 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             hasEntered = false;
             editor.putBoolean("entered", true);
             editor.apply();
+
+//            Intent i = new Intent(MainActivity1.this, ActivityIntro.class);
+//            startActivity(i);
         } else {
             hasEntered = true;
         }
@@ -251,6 +256,7 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
                             SharedPreferences pref = context.getSharedPreferences("engDataSet", 0);
                             SharedPreferences.Editor edit = pref.edit();
                             edit.putString("dataSetUrl", uriString);
+                            edit.putString("downloaded","1");
                             edit.commit();
                             Log.d(TAG, "uriString: " + uriString);
                             //  --------------->>>>>>>>>>>>>>>>       THIS IS THE DOWNLOADED AUDIO URI       <<<<<<<------
@@ -508,10 +514,25 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.about) {
+            Intent i = new Intent(this, AboutActivity.class);
+            startActivity(i);
             //Add an activity
         } else if (id == R.id.buy_cards) {
-            Intent i = new Intent(MainActivity1.this, BillingActLib.class);
-            startActivity(i);
+            if (b) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+                b = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
+                if (b) {
+                    Intent i = new Intent(this, BillingActLib.class);
+                    startActivity(i);
+                } else {
+                    startActivityForResult(new Intent(
+                            Settings.ACTION_WIFI_SETTINGS), 0);
+                }
+            } else {
+                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 0);
+            }
         } else if (id == R.id.invite) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
@@ -522,9 +543,11 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             shareIntent.putExtra(Intent.EXTRA_TEXT, " Have you tried the BC Scanner app?" + "\n" + "Scan all the your business cards digitally and never loose your cards. " + "\n" + "https://play.google.com/store/apps/details?id=businesscard.dhruv.businesscardscanner");
             this.startActivity(Intent.createChooser(shareIntent, "Invite to use BC Scanner"));
         } else if (id == R.id.support) {
-
+            Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "dhruvrathi15@gmail.com", null));
+            startActivity(Intent.createChooser(i, "Send Email..."));
         } else if (id == R.id.aboutMe) {
-
+            Intent i = new Intent(MainActivity1.this,AboutDeveloper.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -553,4 +576,18 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             return null;
         }
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            if (!wifiManager.isWifiEnabled()) {
+                Intent i = new Intent(this, BillingActLib.class);
+                startActivity(i);
+            } else {
+                Toast.makeText(this, "No internet connection available.", Toast.LENGTH_SHORT).show();
+                //write your code for any kind of network calling to fetch data
+            }
+        }
+    }
+
 }

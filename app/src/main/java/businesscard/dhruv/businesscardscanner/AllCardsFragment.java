@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -55,15 +56,22 @@ public class AllCardsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
-                    int totalCards = pref.getInt("CardNo", 0);
-                    if (totalCards >= 10) {
-                        // do not allow access SHOW PAYMENT DETAILS
+                    SharedPreferences pref1 = v.getContext().getSharedPreferences("engDataSet", 0);
+                    String isThere = pref1.getString("downloaded", "0");
+                    if (isThere.equals("0")) {
+                        Toast.makeText(v.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
                     } else {
-                        Intent i = new Intent(getContext(), MainActivity.class);
-                        startActivity(i);
+
+                        SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
+                        int totalCards = pref.getInt("CardNo", 0);
+                        if (totalCards >= 10) {
+                            // do not allow access SHOW PAYMENT DETAILS
+                        } else {
+                            Intent i = new Intent(getContext(), MainActivity.class);
+                            startActivity(i);
 //                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
 //                    startActivity(i);
+                        }
                     }
                 }
             });
@@ -88,15 +96,15 @@ public class AllCardsFragment extends Fragment {
     // Save each card info into shared prefs and build the arrayList using them every time and in case they are empty sync up to check if the user has deleted the data
     public ArrayList<CardObject1> getDataSet() {
         ArrayList results = new ArrayList<CardObject1>();
-        Log.d(TAG,"insideAllCardFrag");
+        Log.d(TAG, "insideAllCardFrag");
         SharedPreferences pref = getContext().getSharedPreferences("AllCards", 0);
         int x = pref.getInt("CardNo", 0);
         if (x == 0) {
-            Log.d(TAG,"noCards");
+            Log.d(TAG, "noCards");
             CardObject1 object1 = new CardObject1(0, "John Doe", "CEO", "BC Scanner");
             results.add(object1);
         } else {
-            Log.d(TAG,"cardsExists");
+            Log.d(TAG, "cardsExists");
             int totalCards = pref.getInt("CardNo", 1);
             int index = 0;
 

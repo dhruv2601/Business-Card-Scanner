@@ -3,6 +3,8 @@ package businesscard.dhruv.businesscardscanner;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ public class CreateAccount extends AppCompatActivity {
     public String password;
     public String phoneNo;
     public String email;
+    public static SharedPreferences sref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,15 @@ public class CreateAccount extends AppCompatActivity {
         edtPhoneNo = (TextView) findViewById(R.id.input_p_number);
 
         // also send a conformation email to the user after successful sign up
+
+        sref = CreateAccount.this.getSharedPreferences("entered", 0);
+        SharedPreferences.Editor editor = sref.edit();
+        if (sref.getBoolean("entered", false) == false) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Intent i = new Intent(CreateAccount.this, ActivityIntro.class);
+                startActivity(i);
+            }
+        }
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

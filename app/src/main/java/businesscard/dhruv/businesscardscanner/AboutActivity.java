@@ -30,6 +30,5 @@ public class AboutActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
     }
 }

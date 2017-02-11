@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -54,17 +55,25 @@ public class UserKaCard extends Fragment {
             scanOwnCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), MainActivity.class);
-                    SharedPreferences pref = getActivity().getSharedPreferences("OwnCard", 0);
-                    SharedPreferences.Editor editor = pref.edit();
 
-                    // lets keep three states of prefs such that:
-                    // 1) not involved(0)
-                    // 2) initialised:::(1)
-                    // 3) finalised:::(2)
-                    editor.putInt("ownCardStatus", 1);
-                    editor.commit();
-                    startActivity(i);
+                    SharedPreferences pref1 = view.getContext().getSharedPreferences("engDataSet", 0);
+                    String isThere = pref1.getString("downloaded", "0");
+                    if (isThere.equals("0")) {
+                        Toast.makeText(view.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        SharedPreferences pref = getActivity().getSharedPreferences("OwnCard", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+
+                        // lets keep three states of prefs such that:
+                        // 1) not involved(0)
+                        // 2) initialised:::(1)
+                        // 3) finalised:::(2)
+                        editor.putInt("ownCardStatus", 1);
+                        editor.commit();
+                        startActivity(i);
+                    }
                 }
             });
 

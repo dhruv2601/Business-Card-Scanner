@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +25,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private AppCompatButton btnLogin;
     private TextView createAccount;
-    private TextView forgotPassword;
     private EditText edtMobile;
     private EditText edtPass;
     private String phoneNo;
     private String password;
+    public static SharedPreferences sref;
 //    public BroadcastReceiver receiver;
 
     @Override
@@ -35,11 +37,22 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         super.onCreate(savedInstanceState);
 
+
 //        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
 //                .applicationId("Mh9fvVwsWq5DcPVk3lGo9sKixRUuux0d6hqyDY1Y")
 //                .server("https://parseapi.back4app.com/")
 //                .clientKey("REWqvRAhPWnuLJajk6XQq58vzQtPBdeESEhWZsO6")
 //                .build());
+
+        sref = LoginActivity.this.getSharedPreferences("entered", 0);
+        SharedPreferences.Editor editor = sref.edit();
+        if (sref.getBoolean("entered", false) == false) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Intent i = new Intent(LoginActivity.this, ActivityIntro.class);
+                startActivity(i);
+            }
+        }
 
         btnLogin = (AppCompatButton) findViewById(R.id.btn_login);
 //        forgotPassword = (TextView) findViewById(R.id.forgot_password);
@@ -99,12 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            forgotPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // send a new password on the mail id and set that password onto parse server
-                }
-            });
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override

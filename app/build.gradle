@@ -58,6 +58,8 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'com.daimajia.androidviewhover:library:1.0.4@aar'
 
+    compile 'com.heinrichreimersoftware:material-intro:1.6'
+
     testCompile 'junit:junit:4.12'
     compile project(':tess-two')
     compile project(':annca')

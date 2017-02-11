@@ -84,7 +84,7 @@ public class SaveCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_card);
 
-        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Click on TICKS on the right to save entries.", Toast.LENGTH_SHORT).show();
 
         mHandler = new Handler();
         entities = new HashMap<>();
@@ -931,6 +931,11 @@ public class SaveCardActivity extends AppCompatActivity {
             adapter = new EntryDetailsRVAdapter(getDataSet(), SaveCardActivity.this);
             rvEntryDetails.setAdapter(adapter);
             pDial.dismiss();
+
+            Snackbar snackbar = Snackbar
+                    .make(cord, "Select the ticks on right to save entries", Snackbar.LENGTH_LONG);
+            snackbar.setActionTextColor(Color.RED);
+            snackbar.show();
 
             super.onPostExecute(aVoid);
         }

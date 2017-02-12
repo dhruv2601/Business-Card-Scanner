@@ -55,9 +55,14 @@ public class AllCardsFragment extends Fragment {
 //                        Toast.makeText(v.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
 //                    } else {
 
-                    SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
-                    int totalCards = pref.getInt("CardNo", 0);
-                    if (totalCards >= 10) {
+                    SharedPreferences pref = v.getContext().getSharedPreferences("cardMng",0);
+                    int cardsLeft = pref.getInt("cardsLeft",0);
+                    int tempNo = pref.getInt("tempNo",0);
+                    cardsLeft-=tempNo;
+
+//                    SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
+//                    int totalCards = pref.getInt("CardNo", 0);
+                    if (cardsLeft < 0) {
                         new AlertDialog.Builder(v.getContext()).setTitle("More cards needed").setMessage("You have exhausted the current card numbers limit.")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {

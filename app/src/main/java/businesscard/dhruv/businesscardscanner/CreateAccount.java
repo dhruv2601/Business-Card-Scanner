@@ -105,10 +105,19 @@ public class CreateAccount extends AppCompatActivity {
                                 }
 
                                 if (already == 0) {
-                                    ParseUser user = new ParseUser();
+                                    final ParseUser user = new ParseUser();
                                     user.setUsername(phoneNo);
                                     user.setEmail(email);
                                     user.setPassword(password);
+                                    int cardsLeft = user.getInt("cardsLeft");
+                                    Log.d(TAG, "cardsLeft: " + cardsLeft);
+                                    user.put("cardsLeft", 10);
+
+                                    SharedPreferences cardsMng = CreateAccount.this.getSharedPreferences("cardMng",0);
+                                    SharedPreferences.Editor cardEdit = cardsMng.edit();
+                                    cardEdit.putInt("cardsLeft",10);
+                                    cardEdit.commit();
+
                                     user.signUpInBackground(new SignUpCallback() {
                                         @Override
                                         public void done(ParseException e) {

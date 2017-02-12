@@ -2,6 +2,7 @@ package businesscard.dhruv.businesscardscanner;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,12 +88,50 @@ public class BillingActLib extends AppCompatActivity implements BillingProcessor
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
+    public void onProductPurchased(final String productId, final TransactionDetails details) {
         checkStatus();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(BillingActLib.this,ThankYouAct.class);
+
+                int cards = 0;
+                switch (productId) {
+                    case cards10:
+                        cards = 10;
+                        break;
+                    case cards25:
+                        cards = 25;
+                        break;
+                    case cards50:
+                        cards = 50;
+                        break;
+                    case cards100:
+                        cards = 100;
+                        break;
+                }
+
+                ParseUser user = null;
+                try {
+                    user = ParseUser.getCurrentUser().fetch();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SharedPreferences pref = BillingActLib.this.getSharedPreferences("cardMng", 0);
+                int cardsLeft = pref.getInt("cardsLeft", 0);
+                int tempNo = pref.getInt("tempNo", 0);
+                cardsLeft -= tempNo;
+
+                cardsLeft += cards;
+                SharedPreferences.Editor cardEdit = pref.edit();
+                cardEdit.putInt("tempNo", 0);
+                cardEdit.putInt("cardsLeft", cardsLeft);
+                cardEdit.commit();
+
+                user.put("cardsLeft", cardsLeft);
+                user.saveInBackground();
+
+                Intent i = new Intent(BillingActLib.this, ThankYouAct.class);
                 startActivity(i);
                 BillingActLib.this.finish();
                 Toast.makeText(BillingActLib.this, "Thanks for the purchase. Now you can enjoy more cards!", Toast.LENGTH_SHORT).show();

@@ -110,6 +110,12 @@ public class SaveCardActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // edit text mn jo data edit hua hai save that
 
+                SharedPreferences cardsMng = view.getContext().getSharedPreferences("cardMng",0);
+                SharedPreferences.Editor cardEdit = cardsMng.edit();
+                int tempNo = cardsMng.getInt("tempNo",0);
+                cardEdit.putInt("tempNo",++tempNo);
+                cardEdit.commit();
+
                 if (isMyCard == 1) {
                     SharedPreferences.Editor editor = VSR.edit();
 

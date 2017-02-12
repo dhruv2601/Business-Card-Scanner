@@ -183,19 +183,44 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             }
         }
 
+        SharedPreferences pref1 = this.getSharedPreferences("cardMng", 0);
+        SharedPreferences.Editor editor1 = pref1.edit();
+        int tempNo1 = pref1.getInt("tempNo", 0);
+        int cardsLeft1 = pref1.getInt("cardsLeft", 0);
+        Log.d(TAG,"cardInfo: "+tempNo1+"\n"+cardsLeft1);
+
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         b = (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting());
-        if (!b) {
+        if (b) {
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
 
             //this is a pointer to the user
 
-            ParseUser user = ParseUser.getCurrentUser();
+            ParseUser user = null;
+            try {
+                user = ParseUser.getCurrentUser().fetch();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             installation.put("user", user);
             installation.saveInBackground();
 
+//            int cardsLeft = user.getInt("cardsLeft");
+            SharedPreferences pref = this.getSharedPreferences("cardMng", 0);
+            SharedPreferences.Editor editor = pref.edit();
+            int tempNo = pref.getInt("tempNo", 0);
+            int cardsLeft = pref.getInt("cardsLeft", 0);
+            cardsLeft -= tempNo;
+            Log.d(TAG,"cardsLeft: "+cardsLeft+"\n"+tempNo);
+            tempNo = 0;
+            editor.putInt("tempNo", tempNo);
+            editor.putInt("cardsLeft", cardsLeft);
+            editor.commit();
+
+            user.put("cardsLeft", cardsLeft);
+            user.saveInBackground();
             // doing the cloud backup every time app connected to net
         }
 
@@ -256,7 +281,7 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
                             SharedPreferences pref = context.getSharedPreferences("engDataSet", 0);
                             SharedPreferences.Editor edit = pref.edit();
                             edit.putString("dataSetUrl", uriString);
-                            edit.putString("downloaded","1");
+                            edit.putString("downloaded", "1");
                             edit.commit();
                             Log.d(TAG, "uriString: " + uriString);
                             //  --------------->>>>>>>>>>>>>>>>       THIS IS THE DOWNLOADED AUDIO URI       <<<<<<<------
@@ -545,7 +570,7 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "dhruvrathi15@gmail.com", null));
             startActivity(Intent.createChooser(i, "Send Email..."));
         } else if (id == R.id.aboutMe) {
-            Intent i = new Intent(MainActivity1.this,AboutDeveloper.class);
+            Intent i = new Intent(MainActivity1.this, AboutDeveloper.class);
             startActivity(i);
         }
 
@@ -588,5 +613,4 @@ public class MainActivity1 extends AppCompatActivity implements NavigationView.O
             }
         }
     }
-
 }

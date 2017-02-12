@@ -39,7 +39,6 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:debuggable="false"
         tools:replace="android:icon">
         <activity android:name=".MainActivity" />
         <activity
@@ -61,23 +60,41 @@
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity
             android:name=".CropImage"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MainActivity1" />
-        <activity android:name=".AllCardsFragment" />
-        <activity android:name=".ShowCardDetails" />
+        <activity
+            android:name=".MainActivity1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AllCardsFragment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ShowCardDetails"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".CreateAccount" />
-        <activity android:name=".FullImage" />
+        <activity
+            android:name=".CreateAccount"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FullImage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SaveCardActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".EditCardActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".BillingActLib" />
-        <activity android:name=".SplashScreen">
+        <activity
+            android:name=".BillingActLib"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -85,11 +102,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".Try" />
-        <activity android:name=".ThankYouAct" />
-        <activity android:name=".UserKaCard" />
-        <activity android:name=".VarietyFragment" />
-        <activity android:name=".AboutDeveloper" />
-        <activity android:name=".AboutActivity" />
+        <activity
+            android:name=".ThankYouAct"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserKaCard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VarietyFragment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AboutDeveloper"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AboutActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActivityIntro"
             android:theme="@style/Theme.Intro" />

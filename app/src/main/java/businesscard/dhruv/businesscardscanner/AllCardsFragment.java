@@ -1,26 +1,19 @@
 package businesscard.dhruv.businesscardscanner;
 
-import android.*;
-import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.os.Build;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -62,17 +55,25 @@ public class AllCardsFragment extends Fragment {
 //                        Toast.makeText(v.getContext(), "English Data is downloading, please wait...", Toast.LENGTH_LONG).show();
 //                    } else {
 
-                        SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
-                        int totalCards = pref.getInt("CardNo", 0);
-                        if (totalCards >= 10) {
-                            // do not allow access SHOW PAYMENT DETAILS
-                        } else {
-                            Intent i = new Intent(getContext(), MainActivity.class);
-                            startActivity(i);
-                            AllCardsFragment.this.getActivity().finish();
+                    SharedPreferences pref = v.getContext().getSharedPreferences("AllCards", 0);
+                    int totalCards = pref.getInt("CardNo", 0);
+                    if (totalCards >= 10) {
+                        new AlertDialog.Builder(v.getContext()).setTitle("More cards needed").setMessage("You have exhausted the current card numbers limit.")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                    }
+                                }).show();
+                        Intent i = new Intent(getActivity(), BillingActLib.class);
+                        startActivity(i);
+                        // do not allow access SHOW PAYMENT DETAILS
+                    } else {
+                        Intent i = new Intent(getContext(), MainActivity.class);
+                        startActivity(i);
+                        AllCardsFragment.this.getActivity().finish();
 //                    Intent i = new Intent(MainActivity1.this, BillingActLib.class);
 //                    startActivity(i);
-                        }
+                    }
 //                    }
                 }
             });

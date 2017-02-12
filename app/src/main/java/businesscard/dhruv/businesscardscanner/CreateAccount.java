@@ -119,6 +119,7 @@ public class CreateAccount extends AppCompatActivity {
                                                 progressDialog.dismiss();
                                                 Intent i = new Intent(CreateAccount.this, MainActivity1.class);
                                                 startActivity(i);
+                                                CreateAccount.this.finish();
                                             } else {
                                                 new AlertDialog.Builder(CreateAccount.this).setTitle("Please Retry").setMessage("An error was encountered from the server. Thank you for your patience!")
                                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
